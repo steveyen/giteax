@@ -4,21 +4,44 @@ import (
 	"encoding/json"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 )
 
-func HttpMuxInit(mux *http.ServeMux) {
-	mux.Handle("/static/",
-		http.StripPrefix("/static/",
-			http.FileServer(http.Dir(*staticDir))))
+func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
+	proxyTargetURL, err := url.Parse(proxyTarget)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	mux.HandleFunc("/kick", HttpHandleKick)
+	mux.Handle("/x/static/",
+		http.StripPrefix("/x/static/",
+			http.FileServer(http.Dir(staticDir))))
+
+	mux.HandleFunc("/x/kick", HttpHandleKick)
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		director := func(req *http.Request) {
+			req.URL.Scheme = proxyTargetURL.Scheme
+			req.URL.Host = proxyTargetURL.Host
+		}
+
+		proxy := &httputil.ReverseProxy{
+			Director: director,
+		}
+
+		proxy.ServeHTTP(w, r)
+	})
 }
 
 // ------------------------------------------------
 
 func HttpHandleKick(w http.ResponseWriter, r *http.Request) {
 	StatsNumInc("http.Kick")
+
+	log.Printf("kick, r: %+v", r)
 
 	var err error
 
@@ -28,11 +51,12 @@ func HttpHandleKick(w http.ResponseWriter, r *http.Request) {
 		var b []byte
 
 		b, err = ioutil.ReadAll(r.Body)
-		if err != nil {
+		if err == nil {
 			var m map[string]interface{}
 
 			err = json.Unmarshal(b, &m)
 			if err == nil {
+				log.Printf("kick, m: %+v", m)
 			}
 		}
 

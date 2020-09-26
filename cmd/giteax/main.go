@@ -29,14 +29,15 @@ func main() {
 
 	var flags []string
 	flag.VisitAll(func(f *flag.Flag) {
-		flags = append(flags, fmt.Sprintf("%s=%v", f.Name, f.Value))
+		flags = append(flags,
+			fmt.Sprintf("%s=%v", f.Name, f.Value))
 	})
 
 	StatsInfo("main.flags", strings.Join(flags, " "))
 
 	mux := http.NewServeMux()
 
-	HttpMuxInit(mux)
+	HttpMuxInit(mux, *proxyTarget, *staticDir)
 
 	go StatsHistsRun(*statsEvery)
 
