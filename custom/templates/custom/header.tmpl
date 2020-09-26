@@ -1,13 +1,13 @@
 <style>
-.x .x-row {
+.ui.container .x .x-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 20px 0px 40px 0px;
 }
-.x .cluster-config,
-.x .cluster-status {
+.ui.container .x .cluster-config,
+.ui.container .x .cluster-status {
   flex-basis: 1;
   flex-grow: 10;
   border: 1px solid rgba(34,36,38,.15);
@@ -15,22 +15,26 @@
   border-radius: .28571429rem;
   padding: 40px 40px 50px 40px;
 }
-.x .cluster-config {
+.ui.container .x .cluster-config {
   margin-right: 20px;
 }
-input.x[type="checkbox"] {
+.ui.container input.x[type="checkbox"] {
   margin-right: 3px;
 }
-.repository-summary,
-.secondary.menu,
-#repo-files-table {
+.ui.container .repository-summary,
+.ui.container .secondary.menu,
+.ui.container input#x-repo-advanced-toggle ~ .secondary.menu,
+.ui.container #repo-files-table {
   display: none;
 }
-input#x-repo-advanced-toggle:checked ~ .repository-summary,
-input#x-repo-advanced-toggle:checked ~ .secondary.menu {
+.ui.container body.x-none .repository-summary,
+.ui.container body.x-none .secondary.menu,
+.ui.container input#x-repo-advanced-toggle:checked ~ .repository-summary,
+.ui.container input#x-repo-advanced-toggle:checked ~ .secondary.menu {
   display: flex;
 }
-input#x-repo-advanced-toggle:checked ~ #repo-files-table {
+.ui.container body.x-none #repo-files-table,
+.ui.container input#x-repo-advanced-toggle:checked ~ #repo-files-table {
   display: table;
 }
 </style>
