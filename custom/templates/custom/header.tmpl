@@ -4,7 +4,9 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 20px 0px 40px 0px;
+  margin: 20px 0px 15px 0px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 60px;
 }
 .ui.container .x .cluster-config,
 .ui.container .x .cluster-status {
@@ -27,13 +29,13 @@
 .ui.container #repo-files-table {
   display: none;
 }
-.ui.container body.x-none .repository-summary,
-.ui.container body.x-none .secondary.menu,
+body.x-none .ui.container .repository-summary,
 .ui.container input#x-repo-advanced-toggle:checked ~ .repository-summary,
+body.x-none .ui.container .secondary.menu,
 .ui.container input#x-repo-advanced-toggle:checked ~ .secondary.menu {
   display: flex;
 }
-.ui.container body.x-none #repo-files-table,
+body.x-none .ui.container #repo-files-table,
 .ui.container input#x-repo-advanced-toggle:checked ~ #repo-files-table {
   display: table;
 }
