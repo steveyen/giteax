@@ -1,0 +1,36 @@
+<style>
+.x .x-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0px 40px 0px;
+}
+.x .cluster-config,
+.x .cluster-status {
+  flex-basis: 1;
+  flex-grow: 10;
+  border: 1px solid rgba(34,36,38,.15);
+  box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+  border-radius: .28571429rem;
+  padding: 40px 40px 50px 40px;
+}
+.x .cluster-config {
+  margin-right: 20px;
+}
+input.x[type="checkbox"] {
+  margin-right: 3px;
+}
+.repository-summary,
+.secondary.menu,
+#repo-files-table {
+  display: none;
+}
+input#x-repo-advanced-toggle:checked ~ .repository-summary,
+input#x-repo-advanced-toggle:checked ~ .secondary.menu {
+  display: flex;
+}
+input#x-repo-advanced-toggle:checked ~ #repo-files-table {
+  display: table;
+}
+</style>

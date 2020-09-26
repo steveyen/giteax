@@ -1,7 +1,8 @@
 <script src="/x/static/main.js"></script>
 
-<template id="template-cluster-config">
+<template id="template-cluster-info">
 <div class="x">
+<div class="x-row">
 <pre class="cluster-config">
   CLUSTER-CONFIG...
 
@@ -12,7 +13,10 @@
 <pre class="cluster-status">
   CLUSTER-STATUS...
 
-    STATUS          : unavailable, not deployed, not approved
+    STATUS          : changed...
+                        not approved
+                        not deployed
+                        unavailable
 
     WEB UI console  : unavailable
 
@@ -23,26 +27,5 @@
     NODES warming   : 0
 </pre>
 </div>
+</div>
 </template>
-
-<style>
-.x {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 20px 0px 40px 0px;
-}
-.x .cluster-config,
-.x .cluster-status {
-  flex-basis: 1;
-  flex-grow: 10;
-  border: 1px solid rgba(34,36,38,.15);
-  box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
-  border-radius: .28571429rem;
-  padding: 40px 40px 50px 40px;
-}
-.x .cluster-config {
-  margin-right: 20px;
-}
-</style>

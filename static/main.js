@@ -4,11 +4,27 @@ $(document).ready(async () => {
   console.log("xmain ready");
 
   var rt = document.getElementById("repo-topics");
-  var tmpl = document.getElementById("template-cluster-config");
-  if (rt && tmpl) {
-    el = document.createElement("div");
-    el.innerHTML = tmpl.innerHTML;
+  if (rt) {
+    var lb = document.createElement("label");
+    lb.className = "x";
+    lb.htmlFor = "x-repo-advanced-toggle";
+    lb.innerHTML = "Show details / history";
+    rt.parentElement.insertBefore(lb, rt.nextSibling);
 
-    rt.parentElement.insertBefore(el, rt.nextSibling);
+    var cb = document.createElement("input");
+    cb.className = "x";
+    cb.id = "x-repo-advanced-toggle";
+    cb.name = "x-repo-advanced-toggle";
+    cb.type = "checkbox";
+    rt.parentElement.insertBefore(cb, rt.nextSibling);
+
+    var tmpl = document.getElementById("template-cluster-info");
+    if (tmpl) {
+      el = document.createElement("div");
+      el.className = "x";
+      el.innerHTML = tmpl.innerHTML;
+
+      rt.parentElement.insertBefore(el, rt.nextSibling);
+    }
   }
 });
