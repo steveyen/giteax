@@ -1,1 +1,30 @@
 <script src="/x/static/main.js"></script>
+
+<template id="template-cluster-config">
+<div class="x">
+<pre class="cluster-config">
+  CLUSTER-CONFIG...
+
+    TYPE            : couchbase-cluster/TestDrive.0001
+
+    STATUS          : unavailable, not deployed, not approved
+
+    WEB UI console  : unavailable
+
+    SDK endpoints   : unavailable
+
+    NODES wanted    : 1
+    NODES current   : 0
+    NODES pending   : 0
+    NODES warming   : 0
+</pre>
+</div>
+</template>
+
+<style>
+.x .cluster-config {
+  margin: 20px 0px 20px 0px;
+  border: 1px solid #888;
+  padding: 40px 40px 40px 40px;
+}
+</style>
