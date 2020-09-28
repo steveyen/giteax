@@ -71,8 +71,8 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   function cbConfigCatalogUI(cbConfig, catalog, el) {
-    var catalogItem = cbConfigCatalogValidate(cbConfig, catalog);
-    if (!catalogItem) {
+    var chk = cbConfigCatalogCheck(cbConfig, catalog);
+    if (!chk || !chk.catalogKey) {
       m.render(el, [
         m("h3", "Cluster Config (not from catalog)"),
         m("pre", jsyaml.dump(cbConfig)),
@@ -89,11 +89,11 @@ $(document).ready(async () => {
     var edit;
 
     function editStart() {
-      edit = JSON.parse(JSON.stringify(cbConfig[0]));
+      edit = JSON.parse(JSON.stringify(chk));
     }
 
     function editSubmit() {
-      cbConfig[0] = edit;
+      chk = edit;
       edit = null;
     }
 
@@ -104,39 +104,52 @@ $(document).ready(async () => {
           edit
           ? m(".edit", [
               m("ul", catalogKeys.map((k) => {
+                var v = catalog[k];
                 return m("li",
                          m("label", [
-                           m("input[type=radio][group=catalogItem]",
-                             {selected: k == catalogItem}),
-                           m("span", catalog[k].name),
-                           m("span", catalog[k].desc),
+                           m("input[type=radio][name=catalogKey]",
+                             {checked: k == edit.catalogKey}),
+                           m("span", v.name),
+                           m("div", v.desc),
+                           m("ul", v.descFeatures.map((f) => {
+                             return m("li", f);
+                           })),
                          ]));
               })),
-              m(".fields", [
-                m("label", {forHtml: "nodes"}, [
-                  "nodes: ",
-                  m("input", {type: "input", name: "nodes",
-                              oninput: (e) => {
-                                edit.spec.nodes = e.target.value;
-                              },
-                              value: edit.spec.nodes}),
-                ]),
-              ]),
+              edit.cbConfig.map((c) => {
+                return m(".fields", [
+                  m("label[for=nodes]", [
+                    "nodes: ",
+                    m("input[type=input][id=nodes][name=nodes]", {
+                      oninput: (e) => {
+                        c.spec.nodes = e.target.value;
+                      },
+                      value: c.spec.nodes,
+                    }),
+                  ]),
+                ]);
+              }),
               m(".controls", [
                 m("button", {onclick: editSubmit}, "submit"),
                 m("button", {onclick: () => { edit = null; }}, "cancel"),
               ]),
             ])
           : m(".view", [
-              m(".catalogItemName", catalog[catalogItem].name),
-              m(".catalogItemDesc", catalog[catalogItem].desc),
-              m(".fields", [
-                m("label", "nodes: " + cbConfig[0].spec.nodes),
-              ]),
+              m("h3.catalogItemName", catalog[chk.catalogKey].name),
+              m(".catalogItemDesc", catalog[chk.catalogKey].desc),
+              m("ul.catalogItemDescFeatures",
+                catalog[chk.catalogKey].descFeatures.map((f) => {
+                  return m("li", f);
+                })),
+              chk.cbConfig.map((c) => {
+                return m(".fields", [
+                         m("label", "nodes: " + c.spec.nodes),
+                       ]);
+              }),
               m(".controls", [
                 m("button", {onclick: editStart}, "edit"),
-              ]),
-            ]),
+              ])
+            ])
         ]);
       }
     };
@@ -146,14 +159,20 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  function cbConfigCatalogValidate(cbConfig, catalog) {
+  function cbConfigCatalogCheck(cbConfig, catalog) {
+    var rv = {
+      catalogKey: null,
+      cbConfig: JSON.parse(JSON.stringify(cbConfig)),
+      errs: [],
+    };
+
     if (cbConfig.length == 1 &&
         catalog[cbConfig[0].apiVersion] &&
         cbConfig[0].spec &&
         cbConfig[0].spec.nodes > 0) {
-      return cbConfig[0].apiVersion;
+      rv.catalogKey = cbConfig[0].apiVersion;
     }
 
-    return null;
+    return rv;
   }
 });

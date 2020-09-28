@@ -1,3 +1,16 @@
 ez.couchbase.com/v1:
   name: EZ Couchbase Cluster
-  desc: For test-drive and development purposes, or for small, simple app deployments.
+  desc: For test-drive and development purposes,
+        or for small, simple app deployments.
+  descFeatures:
+    - simple
+    - happy
+    - yada
+ez.couchbase.com/v2:
+  name: EZ Couchbase Cluster V2
+  desc: For test-drive and development purposes,
+        or for small, simple app deployments, etc.
+  descFeatures:
+    - foobar
+    - happy
+    - yada
