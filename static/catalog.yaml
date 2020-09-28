@@ -1,2 +1,3 @@
 ez.couchbase.com/v1:
   name: EZ Couchbase Cluster
+  desc: For test-drive and development purposes, or for small, simple app deployments.

@@ -68,10 +68,13 @@ $(document).ready(async () => {
     });
   }
 
+  // -----------------------------------------------------------
+
   function cbConfigCatalogUI(cbConfig, catalog, el) {
-    if (!cbConfigCatalogValidate(cbConfig, catalog)) {
+    var catalogItem = cbConfigCatalogValidate(cbConfig, catalog);
+    if (!catalogItem) {
       m.render(el, [
-        m("h3", "Cluster Config (unvalidated)"),
+        m("h3", "Cluster Config (not from catalog)"),
         m("pre", jsyaml.dump(cbConfig)),
       ]);
 
@@ -101,7 +104,13 @@ $(document).ready(async () => {
           edit
           ? m(".edit", [
               m("ul", catalogKeys.map((k) => {
-                return m("li", catalog[k].name);
+                return m("li",
+                         m("label", [
+                           m("input[type=radio][group=catalogItem]",
+                             {selected: k == catalogItem}),
+                           m("span", catalog[k].name),
+                           m("span", catalog[k].desc),
+                         ]));
               })),
               m(".fields", [
                 m("label", {forHtml: "nodes"}, [
@@ -119,9 +128,8 @@ $(document).ready(async () => {
               ]),
             ])
           : m(".view", [
-              m("ul", catalogKeys.map((k) => {
-                return m("li", catalog[k].name);
-              })),
+              m(".catalogItemName", catalog[catalogItem].name),
+              m(".catalogItemDesc", catalog[catalogItem].desc),
               m(".fields", [
                 m("label", "nodes: " + cbConfig[0].spec.nodes),
               ]),
@@ -136,14 +144,16 @@ $(document).ready(async () => {
     m.mount(el, ClusterConfig);
   }
 
+  // -----------------------------------------------------------
+
   function cbConfigCatalogValidate(cbConfig, catalog) {
     if (cbConfig.length == 1 &&
         catalog[cbConfig[0].apiVersion] &&
         cbConfig[0].spec &&
         cbConfig[0].spec.nodes > 0) {
-      return true;
+      return cbConfig[0].apiVersion;
     }
 
-    return false;
+    return null;
   }
 });
