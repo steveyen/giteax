@@ -3,6 +3,9 @@ console.log("xmain start");
 $(document).ready(async () => {
   console.log("xmain ready...");
 
+  // If we're on the right repo file list page, in the right state,
+  // hide the repo file list behind a checkbox / toggle, and then
+  // load the cluster-config UI panel.
   if (document.getElementById("repo-files-table")) {
     var rt = document.getElementById("repo-topics");
     if (rt) {
@@ -30,7 +33,7 @@ $(document).ready(async () => {
           rt.parentElement.insertBefore(el, rt.nextSibling);
 
           fetchBranchFile(a.baseURI, 'master', 'cb-config.yaml', cbConfigYaml => {
-             cbConfigFetched(a.baseURI, cbConfigYaml);
+             onCbConfigFetched(a.baseURI, cbConfigYaml);
           })
 
           console.log("xmain ready... done");
@@ -53,7 +56,7 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  function cbConfigFetched(baseURI, cbConfigYaml) {
+  function onCbConfigFetched(baseURI, cbConfigYaml) {
     var cbConfig = jsyaml.safeLoadAll(cbConfigYaml);
 
     fetch('/x/static/catalog.yaml')
@@ -63,14 +66,14 @@ $(document).ready(async () => {
 
       var el = document.getElementById("cluster-config");
       if (el) {
-        cbConfigCatalogUI(cbConfig, catalog, el);
+        cbConfigUI(cbConfig, catalog, el);
       }
     });
   }
 
   // -----------------------------------------------------------
 
-  function cbConfigCatalogUI(cbConfig, catalog, el) {
+  function cbConfigUI(cbConfig, catalog, el) {
     console.log("cbCatalogCheck", cbConfig, catalog);
 
     var chk = cbCatalogCheck(cbConfig, catalog);
@@ -106,21 +109,30 @@ $(document).ready(async () => {
           m("h3", "Cluster Config"),
           edit
           ? m(".edit",
-              m(".edit-panes",
-                m("ul", catalogKeys.map((k) => {
+              m("div",
+                {className: "edit-panes index-" + catalogKeys.indexOf(edit.catalogKey)},
+                m("ul.catalogItems", catalogKeys.map((k, i) => {
                   var v = catalog[k];
                   return m("li",
                            m("label",
                              m("input[type=radio][name=catalogKey]",
-                               {checked: k == edit.catalogKey}),
+                               {value: i,
+                                checked: k == edit.catalogKey,
+                                onchange: (e) => {
+                                  if (e.target.checked) {
+                                    edit.catalogKey = k;
+                                  }
+                                  return true;
+                                }}),
                              m(".catalogItemName", v.name),
                              m(".catalogItemDesc", v.desc),
                              m("ul.catalogItemDesc",
                                v.descList.map((f) => m("li", f)))));
                 })),
-                m("ul", catalogKeys.map((k) => {
+                m("ul.edit-panels", catalogKeys.map((k, i) => {
                   var v = catalog[k];
-                  return m("li",
+                  return m("li.index-" + i,
+                           m(".catalogItemName", v.name),
                            edit.cbConfig.map((c) => {
                              return m(".fields",
                                m("label[for=nodes]",
@@ -132,7 +144,12 @@ $(document).ready(async () => {
                                    value: c.spec.nodes,
                                  })));
                            }));
-                }))),
+                })),
+                m("style", catalogKeys.map((k, i) => {
+                  return ".x .cluster-config .edit .edit-panes.index-" + i +
+                         " > ul.edit-panels li.index-" + i +
+                         " { display: block; }";
+                }).join(" "))),
               m(".controls",
                 m("button", {onclick: editSubmit}, "submit"),
                 m("button", {onclick: () => { edit = null; }}, "cancel")))
@@ -169,6 +186,7 @@ function cbCatalogCheck(cbConfig, catalog) {
   };
 
   if (!rv.cbConfig || rv.cbConfig.length <= 0) {
+    // First time creation case.
     rv.cbConfig = [{
       apiVersion: "ez.couchbase.com/v1",
       spec: { nodes: 0 },
@@ -186,6 +204,8 @@ function cbCatalogCheck(cbConfig, catalog) {
     rv.cbConfig.forEach((c) => {
       if (catalogItem.cbConfig[(c.apiVersion || "") + ":" +
                                (c.kind || "")]) {
+        // TODO. Check the fields of c.
+
         matched += 1;
 
         return;

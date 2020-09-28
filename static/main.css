@@ -8,7 +8,16 @@
   justify-content: space-between;
 }
 
-.x .cluster-config .edit .edit-panes > ul {
-  flex-basis: 1;
-  flex-grow: 10;
+.x .cluster-config .edit .edit-panes > ul.catalogItems {
+  flex-basis: 10rem;
+  flex-grow: 2;
+}
+
+.x .cluster-config .edit .edit-panes > ul.edit-panels {
+  flex-basis: 20rem;
+  flex-grow: 4;
+}
+
+.x .cluster-config .edit .edit-panes > ul.edit-panels li {
+  display: none;
 }
