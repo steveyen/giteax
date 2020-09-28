@@ -115,16 +115,17 @@ $(document).ready(async () => {
                   var v = catalog[k];
                   return m("li",
                            m("label",
-                             m("input[type=radio][name=catalogKey]",
-                               {value: i,
-                                checked: k == edit.catalogKey,
-                                onchange: (e) => {
-                                  if (e.target.checked) {
-                                    edit.catalogKey = k;
-                                  }
-                                  return true;
-                                }}),
-                             m(".catalogItemName", v.name),
+                             m(".catalogItemName",
+                               m("input[type=radio][name=catalogKey]",
+                                 {value: i,
+                                  checked: k == edit.catalogKey,
+                                  onchange: (e) => {
+                                    if (e.target.checked) {
+                                      edit.catalogKey = k;
+                                    }
+                                    return true;
+                                  }}),
+                               v.name),
                              m(".catalogItemDesc", v.desc),
                              m("ul.catalogItemDesc",
                                v.descList.map((f) => m("li", f)))));

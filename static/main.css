@@ -11,6 +11,15 @@
 .x .cluster-config .edit .edit-panes > ul.catalogItems {
   flex-basis: 10rem;
   flex-grow: 2;
+  margin-right: 20px;
+}
+
+.x .cluster-config .edit .edit-panes > ul.catalogItems input {
+  margin-right: 5px;
+}
+
+.x .cluster-config .edit .edit-panes > ul.catalogItems .catalogItemDesc {
+  margin-left: 20px;
 }
 
 .x .cluster-config .edit .edit-panes > ul.edit-panels {
@@ -20,4 +29,12 @@
 
 .x .cluster-config .edit .edit-panes > ul.edit-panels li {
   display: none;
+}
+
+.x .cluster-config .edit .edit-panes > ul {
+  padding-left: 0;
+}
+
+.x .cluster-config .edit .edit-panes > ul > li {
+  list-style: none;
 }
