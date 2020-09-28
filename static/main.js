@@ -152,8 +152,10 @@ $(document).ready(async () => {
                          " { display: block; }";
                 }).join(" "))),
               m(".controls",
-                m("button", {onclick: editSubmit}, "submit"),
-                m("button", {onclick: () => { edit = null; }}, "cancel")))
+                m("button.ui.button.green",
+                  {onclick: editSubmit}, "Submit"),
+                m("button.ui.button.red",
+                  {onclick: () => { edit = null; }}, "Cancel")))
           : m(".view",
               m(".catalogItemName", catalog[chk.catalogKey].name),
               m(".pane",
@@ -166,7 +168,8 @@ $(document).ready(async () => {
                   m(".fields",
                     m("label", "nodes: " + c.spec.nodes)))),
               m(".controls",
-                m("button", {onclick: editStart}, "edit"))))
+                m("button.ui.button",
+                  {onclick: editStart}, "Modify"))))
       }
     };
 

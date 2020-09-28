@@ -1,26 +1,29 @@
 .x .cluster-config .catalogItemName {
-  font-weight: bold;
-}
-
-.x .cluster-config .view .catalogItemName {
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .x .cluster-config .view .pane {
   margin-left: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .x .cluster-config .edit .edit-panes {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .x .cluster-config .edit .edit-panes > ul.catalogItems {
-  flex-basis: 10rem;
+  flex-basis: 20rem;
   flex-grow: 2;
-  margin-right: 20px;
+  margin-right: 50px;
+}
+
+.x .cluster-config .edit .edit-panes > ul.catalogItems > li {
+  border: 1px solid #ddd;
+  padding: 20px 20px 20px 20px;
 }
 
 .x .cluster-config .edit .edit-panes > ul.catalogItems input {
@@ -34,6 +37,7 @@
 .x .cluster-config .edit .edit-panes > ul.edit-panels {
   flex-basis: 20rem;
   flex-grow: 4;
+  padding-top: 20px;
 }
 
 .x .cluster-config .edit .edit-panes > ul.edit-panels li {
@@ -46,12 +50,12 @@
 
 .x .cluster-config .edit .edit-panes > ul > li {
   list-style: none;
-  margin-bottom: 20px;
 }
 
 .x .cluster-config .edit .controls {
   border-top: 1px solid #ddd;
   padding-top: 20px;
+  text-align: right;
 }
 
 .x .cluster-config .edit .controls button {
