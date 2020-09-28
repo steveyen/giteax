@@ -71,7 +71,9 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   function cbConfigCatalogUI(cbConfig, catalog, el) {
-    var chk = cbConfigCatalogCheck(cbConfig, catalog);
+    console.log("cbCatalogCheck", cbConfig, catalog);
+
+    var chk = cbCatalogCheck(cbConfig, catalog);
     if (!chk || !chk.catalogKey) {
       m.render(el, [
         m("h3", "Cluster Config (not from catalog)"),
@@ -99,10 +101,10 @@ $(document).ready(async () => {
 
     var ClusterConfig = {
       view: function() {
-        return m("div", [
+        return m("div",
           m("h3", "Cluster Config"),
           edit
-          ? m(".edit", [
+          ? m(".edit",
               m("ul", catalogKeys.map((k) => {
                 var v = catalog[k];
                 return m("li",
@@ -115,24 +117,20 @@ $(document).ready(async () => {
                              v.descList.map((f) => m("li", f)))));
               })),
               edit.cbConfig.map((c) => {
-                return m(".fields", [
-                  m("label[for=nodes]", [
+                return m(".fields",
+                  m("label[for=nodes]",
                     "nodes: ",
                     m("input[type=input][id=nodes][name=nodes]", {
                       oninput: (e) => {
                         c.spec.nodes = e.target.value;
                       },
                       value: c.spec.nodes,
-                    }),
-                  ]),
-                ]);
+                    })));
               }),
-              m(".controls", [
+              m(".controls",
                 m("button", {onclick: editSubmit}, "submit"),
-                m("button", {onclick: () => { edit = null; }}, "cancel"),
-              ]),
-            ])
-          : m(".view", [
+                m("button", {onclick: () => { edit = null; }}, "cancel")))
+          : m(".view",
               m("h3.catalogItemName", catalog[chk.catalogKey].name),
               m(".catalogItemDesc", catalog[chk.catalogKey].desc),
               m("ul.catalogItemDesc",
@@ -143,64 +141,59 @@ $(document).ready(async () => {
                 m(".fields",
                   m("label", "nodes: " + c.spec.nodes))),
               m(".controls",
-                m("button", {onclick: editStart}, "edit")),
-            ])
-        ]);
+                m("button", {onclick: editStart}, "edit"))))
       }
     };
 
     m.mount(el, ClusterConfig);
   }
-
-  // -----------------------------------------------------------
-
-  function cbConfigCatalogCheck(cbConfig, catalog) {
-    console.log("cbConfigCatalogCheck", cbConfig, catalog);
-
-    var rv = {
-      // What we think is a matching catalog item
-      // that represents the cbConfig.
-      catalogKey: null,
-
-      // Our cleaned up, processed version of the cbConfig,
-      // perhaps with default value initializations and/or
-      // perhaps with error / hint validation messages.
-      cbConfig: JSON.parse(JSON.stringify(cbConfig)),
-    };
-
-    if (!rv.cbConfig || rv.cbConfig.length <= 0) {
-      rv.cbConfig = [{
-        apiVersion: "ez.couchbase.com/v1",
-        spec: { nodes: 0 },
-      }];
-    }
-
-    var matchedLast = 0; // The matched # from last match.
-
-    for (var catalogKey in catalog) {
-      var catalogItem = catalog[catalogKey];
-
-      var matched = 0;
-      var unknown = 0;
-
-      rv.cbConfig.forEach((c) => {
-        if (catalogItem.cbConfig[(c.apiVersion || "") + ":" +
-                                 (c.kind || "")]) {
-          matched += 1;
-
-	  return;
-        }
-
-        unknown += 1;
-      });
-
-      if (matchedLast < matched && unknown <= 0) {
-        rv.catalogKey = catalogKey;
-
-        matchedLast = matched;
-      }
-    }
-
-    return rv;
-  }
 });
+
+// -----------------------------------------------------------
+
+function cbCatalogCheck(cbConfig, catalog) {
+  var rv = {
+    // Represents the best matching catalog item for the cbConfig.
+    catalogKey: null,
+
+    // The cleaned up, processed version of the cbConfig,
+    // perhaps with default value initializeds and/or
+    // perhaps with error / hint validation messages.
+    cbConfig: JSON.parse(JSON.stringify(cbConfig)),
+  };
+
+  if (!rv.cbConfig || rv.cbConfig.length <= 0) {
+    rv.cbConfig = [{
+      apiVersion: "ez.couchbase.com/v1",
+      spec: { nodes: 0 },
+    }];
+  }
+
+  var matchedLast = 0; // The matched # from last match.
+
+  for (var catalogKey in catalog) {
+    var catalogItem = catalog[catalogKey];
+
+    var matched = 0;
+    var unknown = 0;
+
+    rv.cbConfig.forEach((c) => {
+      if (catalogItem.cbConfig[(c.apiVersion || "") + ":" +
+                               (c.kind || "")]) {
+        matched += 1;
+
+        return;
+      }
+
+      unknown += 1;
+    });
+
+    if (matchedLast < matched && unknown <= 0) {
+      rv.catalogKey = catalogKey;
+
+      matchedLast = matched;
+    }
+  }
+
+  return rv;
+}
