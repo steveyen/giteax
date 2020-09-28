@@ -49,8 +49,17 @@
   padding-top: 20px;
 }
 
-.x .cluster-config .edit .edit-panes > ul.edit-panels li {
+.x .cluster-config .edit .edit-panes > ul.edit-panels > li {
   display: none;
+}
+
+.x .cluster-config .edit .edit-panes > ul.edit-panels > li label {
+  display: block;
+  padding: 5px 10px 5px 10px;
+}
+
+.x .cluster-config .edit .edit-panes > ul.edit-panels > li label input {
+  display: block;
 }
 
 .x .cluster-config .edit .edit-panes > ul {

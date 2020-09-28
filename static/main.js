@@ -114,38 +114,46 @@ $(document).ready(async () => {
                 m("ul.catalogItems", catalogKeys.map((k, i) => {
                   var v = catalog[k];
                   return m("li.index-" + i,
-                           m("label",
-                             m(".catalogItemName",
-                               m("input[type=radio][name=catalogKey]",
-                                 {value: i,
-                                  checked: k == edit.catalogKey,
-                                  onchange: (e) => {
-                                    if (e.target.checked) {
-                                      edit.catalogKey = k;
-                                    }
-                                    return true;
-                                  }}),
-                               v.name),
-                             m(".catalogItemDesc", v.desc),
-                             m("ul.catalogItemDesc",
-                               v.descList.map((f) => m("li", f)))));
+                    m("label",
+                      m(".catalogItemName",
+                        m("input[type=radio][name=catalogKey]",
+                          {value: i,
+                           checked: k == edit.catalogKey,
+                           onchange: (e) => {
+                             if (e.target.checked) {
+                               edit.catalogKey = k;
+                             }
+                             return true;
+                           }}),
+                        v.name),
+                      m(".catalogItemDesc", v.desc),
+                      m("ul.catalogItemDesc",
+                        v.descList.map((f) => m("li", f)))));
                 })),
                 m("ul.edit-panels", catalogKeys.map((k, i) => {
                   var v = catalog[k];
-
+                  var d = cbConfigToDict(edit.cbConfig);
                   return m("li.index-" + i,
-                           m(".catalogItemName", v.name),
-                           edit.cbConfig.map((c) => {
-                             return m(".fields",
-                               m("label[for=nodes]",
-                                 "nodes: ",
-                                 m("input[type=input][id=nodes][name=nodes]", {
-                                   oninput: (e) => {
-                                     c.spec.nodes = e.target.value;
-                                   },
-                                   value: c.spec.nodes,
-                                 })));
-                           }));
+                    m(".catalogItemName", v.name),
+                      Object.keys(v.cbConfigDict).map((ak) => {
+                        return m(".fields",
+                          Object.keys(v.cbConfigDict[ak].spec).map((f) => {
+                            if (f.startsWith('^')) {
+                              return;
+                            }
+                            return m('label[for="' + f + '"]',
+                              f + ": ",
+                              m('input[type=input]', {
+                                id: f,
+                                oninput: (e) => {
+                                  edit.cbConfig.spec ||= {};
+                                  edit.cbConfig.spec[f] = e.target.value;
+                                },
+                                value: (edit.cbConfig.spec &&
+                                        edit.cbConfig.spec[f]) || "",
+                              }));
+                          }));
+                        }));
                 })),
                 m("style",
                   catalogKeys.map((k, i) => {
@@ -232,4 +240,16 @@ function cbCatalogCheck(cbConfig, catalog) {
   }
 
   return rv;
+}
+
+// -----------------------------------------------------------
+
+function cbConfigToDict(cbConfig) {
+  var d = {}; // Keyed by "apiVersion:kind".
+
+  cbConfig.forEach((c) => {
+    d[(c.apiVersion || "") + ":" + (c.kind || "")] = c;
+  });
+
+  return d;
 }
