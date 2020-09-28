@@ -132,6 +132,7 @@ $(document).ready(async () => {
                 })),
                 m("ul.edit-panels", catalogKeys.map((k, i) => {
                   var v = catalog[k];
+
                   return m("li.index-" + i,
                            m(".catalogItemName", v.name),
                            edit.cbConfig.map((c) => {
@@ -211,8 +212,8 @@ function cbCatalogCheck(cbConfig, catalog) {
     var unknown = 0;
 
     rv.cbConfig.forEach((c) => {
-      if (catalogItem.cbConfig[(c.apiVersion || "") + ":" +
-                               (c.kind || "")]) {
+      if (catalogItem.cbConfigDict[(c.apiVersion || "") + ":" +
+                                   (c.kind || "")]) {
         // TODO. Check the fields of c.
 
         matched += 1;

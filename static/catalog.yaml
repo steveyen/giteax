@@ -5,7 +5,7 @@ ez.couchbase.com/v1:
   descList:
     - simple
     - easy
-  cbConfig:
+  cbConfigDict:
     "ez.couchbase.com/v1:":
       spec:
         nodes: 0
@@ -20,7 +20,7 @@ ez-medium.couchbase.com/v2:
     - foobar
     - happy
     - totally secure'ish
-  cbConfig:
+  cbConfigDict:
     "foo.couchbase.com/v2:":
       spec:
         nodes: 0
@@ -43,7 +43,7 @@ ez-large.couchbase.com/v2:
     - totally secure'ish
     - much larger than small
     - larger than medium
-  cbConfig:
+  cbConfigDict:
     "bar.couchbase.com/v2:":
       spec:
         bar-nodes: 0
