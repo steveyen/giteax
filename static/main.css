@@ -1,3 +1,14 @@
 .x .cluster-config .catalogItemName {
   font-weight: bold;
 }
+
+.x .cluster-config .edit .edit-panes {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.x .cluster-config .edit .edit-panes > ul {
+  flex-basis: 1;
+  flex-grow: 10;
+}

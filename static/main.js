@@ -102,32 +102,37 @@ $(document).ready(async () => {
 
     var ClusterConfig = {
       view: function() {
-        return m(".cluster-config",
+        return m("div",
           m("h3", "Cluster Config"),
           edit
           ? m(".edit",
-              m("ul", catalogKeys.map((k) => {
-                var v = catalog[k];
-                return m("li",
-                         m("label",
-                           m("input[type=radio][name=catalogKey]",
-                             {checked: k == edit.catalogKey}),
-                           m(".catalogItemName", v.name),
-                           m(".catalogItemDesc", v.desc),
-                           m("ul.catalogItemDesc",
-                             v.descList.map((f) => m("li", f)))));
-              })),
-              edit.cbConfig.map((c) => {
-                return m(".fields",
-                  m("label[for=nodes]",
-                    "nodes: ",
-                    m("input[type=input][id=nodes][name=nodes]", {
-                      oninput: (e) => {
-                        c.spec.nodes = e.target.value;
-                      },
-                      value: c.spec.nodes,
-                    })));
-              }),
+              m(".edit-panes",
+                m("ul", catalogKeys.map((k) => {
+                  var v = catalog[k];
+                  return m("li",
+                           m("label",
+                             m("input[type=radio][name=catalogKey]",
+                               {checked: k == edit.catalogKey}),
+                             m(".catalogItemName", v.name),
+                             m(".catalogItemDesc", v.desc),
+                             m("ul.catalogItemDesc",
+                               v.descList.map((f) => m("li", f)))));
+                })),
+                m("ul", catalogKeys.map((k) => {
+                  var v = catalog[k];
+                  return m("li",
+                           edit.cbConfig.map((c) => {
+                             return m(".fields",
+                               m("label[for=nodes]",
+                                 "nodes: ",
+                                 m("input[type=input][id=nodes][name=nodes]", {
+                                   oninput: (e) => {
+                                     c.spec.nodes = e.target.value;
+                                   },
+                                   value: c.spec.nodes,
+                                 })));
+                           }));
+                }))),
               m(".controls",
                 m("button", {onclick: editSubmit}, "submit"),
                 m("button", {onclick: () => { edit = null; }}, "cancel")))
