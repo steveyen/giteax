@@ -96,12 +96,13 @@ $(document).ready(async () => {
 
     function editSubmit() {
       chk = edit;
+
       edit = null;
     }
 
     var ClusterConfig = {
       view: function() {
-        return m("div",
+        return m(".cluster-config",
           m("h3", "Cluster Config"),
           edit
           ? m(".edit",
@@ -131,7 +132,7 @@ $(document).ready(async () => {
                 m("button", {onclick: editSubmit}, "submit"),
                 m("button", {onclick: () => { edit = null; }}, "cancel")))
           : m(".view",
-              m("h3.catalogItemName", catalog[chk.catalogKey].name),
+              m(".catalogItemName", catalog[chk.catalogKey].name),
               m(".catalogItemDesc", catalog[chk.catalogKey].desc),
               m("ul.catalogItemDesc",
                 catalog[chk.catalogKey].descList.map((f) => {
