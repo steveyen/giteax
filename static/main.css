@@ -19,10 +19,17 @@
   flex-basis: 20rem;
   flex-grow: 2;
   margin-right: 50px;
+  max-height: 60vh;
+  overflow-y: scroll;
 }
 
 .x .cluster-config .edit .edit-panes > ul.catalogItems > li {
   border: 1px solid #ddd;
+  padding: 0 0 0 0;
+}
+
+.x .cluster-config .edit .edit-panes > ul.catalogItems > li label {
+  display: block;
   padding: 20px 20px 20px 20px;
 }
 

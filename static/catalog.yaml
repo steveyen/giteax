@@ -12,23 +12,46 @@ ez.couchbase.com/v1:
         ^nodes:
           range: 1..3
 
-ez.couchbase.com/v2:
-  name: EZ Couchbase Cluster V2
+ez-medium.couchbase.com/v2:
+  name: EZ Couchbase Cluster - Medium (v2)
   desc: For test-drive and development purposes,
-        or for small, simple app deployments, etc.
+        or for small to medium, simple app deployments, etc.
   descList:
     - foobar
     - happy
-    - yada
+    - totally secure'ish
   cbConfig:
     "foo.couchbase.com/v2:":
       spec:
         nodes: 0
         ^nodes:
           range: 1..4
-    "foo.couchbase.com/v2:frazzy":
+    "bar.couchbase.com/v2:frazzy":
       spec:
-        nodes: 0
-        ^nodes:
+        bar-nodes: 0
+        ^bar-nodes:
+          range: 1..4
+        title: "test-cluster"
+
+ez-large.couchbase.com/v2:
+  name: EZ Couchbase Cluster - Large (v2)
+  desc: For test-drive and development purposes,
+        or for small to medium, simple app deployments, etc.
+  descList:
+    - foobar
+    - happy
+    - totally secure'ish
+    - much larger than small
+    - larger than medium
+  cbConfig:
+    "bar.couchbase.com/v2:":
+      spec:
+        bar-nodes: 0
+        ^bar-nodes:
+          range: 1..4
+    "baz.couchbase.com/v2:frazzy":
+      spec:
+        baz-nodes: 0
+        ^baz-nodes:
           range: 1..4
         title: "test-cluster"

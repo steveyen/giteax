@@ -113,7 +113,7 @@ $(document).ready(async () => {
                 {className: "edit-panes index-" + catalogKeys.indexOf(edit.catalogKey)},
                 m("ul.catalogItems", catalogKeys.map((k, i) => {
                   var v = catalog[k];
-                  return m("li",
+                  return m("li.index-" + i,
                            m("label",
                              m(".catalogItemName",
                                m("input[type=radio][name=catalogKey]",
@@ -146,11 +146,15 @@ $(document).ready(async () => {
                                  })));
                            }));
                 })),
-                m("style", catalogKeys.map((k, i) => {
-                  return ".x .cluster-config .edit .edit-panes.index-" + i +
-                         " > ul.edit-panels li.index-" + i +
-                         " { display: block; }";
-                }).join(" "))),
+                m("style",
+                  catalogKeys.map((k, i) => {
+                    return ".x .cluster-config .edit .edit-panes.index-" + i +
+                           " > ul.catalogItems li.index-" + i +
+                           " { background-color: #f4f4f4; }" +
+                           ".x .cluster-config .edit .edit-panes.index-" + i +
+                           " > ul.edit-panels li.index-" + i +
+                           " { display: block; }";
+                  }).join(" "))),
               m(".controls",
                 m("button.ui.button.green",
                   {onclick: editSubmit}, "Submit"),
