@@ -1,15 +1,13 @@
 <script src="/x/static/esprima.js"></script>
 <script src="/x/static/js-yaml.min.js"></script>
+<script src="/x/static/mithril.js"></script>
 <script src="/x/static/main.js"></script>
 
 <template id="template-cluster-info">
 <div class="x">
-<div class="x-row">
-<div class="cluster-config">
-  CLUSTER-CONFIG...
-  <div id="cluster-config-raw"></div>
-</div>
-<div class="cluster-status">
+<div class="x-row" id="cluster-info">
+<div class="cluster-config" id="cluster-config"></div>
+<div class="cluster-status" id="cluster-status">
   CLUSTER-STATUS...
   <pre>
   STATUS          : changed...

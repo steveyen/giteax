@@ -27,7 +27,7 @@ $(document).ready(async () => {
 
         rt.parentElement.insertBefore(el, rt.nextSibling);
 
-	clusterInfoFetch();
+	clusterInfoFetch(clusterInfoRender);
 
         console.log("xmain ready... done");
 
@@ -40,17 +40,33 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  function clusterInfoFetch() {
+  function clusterInfoFetch(andThen) {
     var a = document.querySelector('.repository.file.list .repo-header .repo-title.breadcrumb a');
     if (a) {
       fetch(a.baseURI + '/raw/branch/master/cb-config.yaml')
       .then(response => response.text())
-      .then(text => {
-        var y = jsyaml.safeLoadAll(text);
-
-        document.getElementById("cluster-config-raw").innerText = JSON.stringify(y);
-      });
+      .then(andThen);
     }
+  }
+
+  function clusterInfoRender(text) {
+    var y = jsyaml.safeLoadAll(text);
+
+    var el = document.getElementById("cluster-config");
+
+    var count = 0;
+
+    var ClusterConfig = {
+      view: function() {
+        return m("main", [
+          m("h3", "Cluster Config"),
+          m("pre", JSON.stringify(y)),
+          m("button", {onclick: function() {count++}}, count + " clicks"),
+        ]);
+      }
+    };
+
+    m.mount(el, ClusterConfig);
   }
 });
 
