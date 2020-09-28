@@ -1,33 +1,31 @@
+<script src="/x/static/esprima.js"></script>
+<script src="/x/static/js-yaml.min.js"></script>
 <script src="/x/static/main.js"></script>
 
 <template id="template-cluster-info">
 <div class="x">
 <div class="x-row">
-<pre class="cluster-config">
+<div class="cluster-config">
   CLUSTER-CONFIG...
-
-    TYPE  : couchbase-cluster/TestDrive.0001
-
-    NODES : 1
-
-    RAW: <div id="cluster-config-raw"/>
-</pre>
-<pre class="cluster-status">
+  <div id="cluster-config-raw"></div>
+</div>
+<div class="cluster-status">
   CLUSTER-STATUS...
+  <pre>
+  STATUS          : changed...
+                      not approved
+                      not deployed
+                      unavailable
 
-    STATUS          : changed...
-                        not approved
-                        not deployed
-                        unavailable
+  WEB UI console  : unavailable
 
-    WEB UI console  : unavailable
+  SDK endpoints   : unavailable
 
-    SDK endpoints   : unavailable
-
-    NODES current   : 0
-    NODES pending   : 0
-    NODES warming   : 0
-</pre>
+  NODES current   : 0
+  NODES pending   : 0
+  NODES warming   : 0
+  </pre>
+</div>
 </div>
 </div>
 </template>

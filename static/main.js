@@ -46,8 +46,11 @@ $(document).ready(async () => {
       fetch(a.baseURI + '/raw/branch/master/cb-config.yaml')
       .then(response => response.text())
       .then(text => {
-        document.getElementById("cluster-config-raw").innerText = text;
+        var y = jsyaml.safeLoadAll(text);
+
+        document.getElementById("cluster-config-raw").innerText = JSON.stringify(y);
       });
     }
   }
 });
+
