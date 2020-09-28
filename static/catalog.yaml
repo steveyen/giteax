@@ -1,3 +1,2 @@
 ez.couchbase.com/v1:
-  hello: world
-  heyou: there
+  name: EZ Couchbase Cluster

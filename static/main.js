@@ -78,6 +78,11 @@ $(document).ready(async () => {
       return;
     }
 
+    var catalogKeys = [];
+    for (var k in catalog) {
+      catalogKeys.push(k);
+    }
+
     var edit;
 
     function editStart() {
@@ -95,6 +100,9 @@ $(document).ready(async () => {
           m("h3", "Cluster Config"),
           edit
           ? m(".edit", [
+              m("ul", catalogKeys.map((k) => {
+                return m("li", catalog[k].name);
+              })),
               m(".fields", [
                 m("label", {forHtml: "nodes"}, [
                   "nodes: ",
@@ -111,6 +119,9 @@ $(document).ready(async () => {
               ]),
             ])
           : m(".view", [
+              m("ul", catalogKeys.map((k) => {
+                return m("li", catalog[k].name);
+              })),
               m(".fields", [
                 m("label", "nodes: " + cbConfig[0].spec.nodes),
               ]),
