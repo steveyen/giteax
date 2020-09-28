@@ -6,7 +6,7 @@ ez.couchbase.com/v1:
     - simple
     - easy
   cbConfig:
-    ez.couchbase.com/v1/:
+    "ez.couchbase.com/v1:":
       spec:
         nodes: 0
         ^nodes:
@@ -21,8 +21,14 @@ ez.couchbase.com/v2:
     - happy
     - yada
   cbConfig:
-    ez.couchbase.com/v2/:
+    "foo.couchbase.com/v2:":
       spec:
         nodes: 0
         ^nodes:
           range: 1..4
+    "foo.couchbase.com/v2:frazzy":
+      spec:
+        nodes: 0
+        ^nodes:
+          range: 1..4
+        title: "test-cluster"

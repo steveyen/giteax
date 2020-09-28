@@ -155,7 +155,7 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   function cbConfigCatalogCheck(cbConfig, catalog) {
-    console.log("cbConfigCatalogCheck", cbConfig);
+    console.log("cbConfigCatalogCheck", cbConfig, catalog);
 
     var rv = {
       // What we think is a matching catalog item
@@ -175,17 +175,16 @@ $(document).ready(async () => {
       }];
     }
 
-    for (var catalogKey in catalog) {
-      if (rv.catalogKey) { break; }
+    var matchedLast = 0; // The matched # from last match.
 
-      catalogItem = catalog[catalogKey];
+    for (var catalogKey in catalog) {
+      var catalogItem = catalog[catalogKey];
 
       var matched = 0;
       var unknown = 0;
 
       rv.cbConfig.forEach((c) => {
-        console.log(c);
-        if (catalogItem.cbConfig[(c.apiVersion || "") + "/" +
+        if (catalogItem.cbConfig[(c.apiVersion || "") + ":" +
                                  (c.kind || "")]) {
           matched += 1;
 
@@ -195,8 +194,10 @@ $(document).ready(async () => {
         unknown += 1;
       });
 
-      if (matched >= 1 && unknown <= 0) {
+      if (matchedLast < matched && unknown <= 0) {
         rv.catalogKey = catalogKey;
+
+        matchedLast = matched;
       }
     }
 
