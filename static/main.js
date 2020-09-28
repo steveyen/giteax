@@ -6,32 +6,37 @@ $(document).ready(async () => {
   if (document.getElementById("repo-files-table")) {
     var rt = document.getElementById("repo-topics");
     if (rt) {
-      var lb = document.createElement("label");
-      lb.className = "x";
-      lb.htmlFor = "x-repo-advanced-toggle";
-      lb.innerHTML = "Show details / history";
-      rt.parentElement.insertBefore(lb, rt.nextSibling);
+      var a = document.querySelector('.repository.file.list .repo-header .repo-title.breadcrumb a');
+      if (a) {
+        var lb = document.createElement("label");
+        lb.className = "x";
+        lb.htmlFor = "x-repo-advanced-toggle";
+        lb.innerHTML = "Show details / history";
+        rt.parentElement.insertBefore(lb, rt.nextSibling);
 
-      var cb = document.createElement("input");
-      cb.className = "x";
-      cb.id = "x-repo-advanced-toggle";
-      cb.name = "x-repo-advanced-toggle";
-      cb.type = "checkbox";
-      rt.parentElement.insertBefore(cb, rt.nextSibling);
+        var cb = document.createElement("input");
+        cb.className = "x";
+        cb.id = "x-repo-advanced-toggle";
+        cb.name = "x-repo-advanced-toggle";
+        cb.type = "checkbox";
+        rt.parentElement.insertBefore(cb, rt.nextSibling);
 
-      var tmpl = document.getElementById("template-cluster-info");
-      if (tmpl) {
-        el = document.createElement("div");
-        el.className = "x";
-        el.innerHTML = tmpl.innerHTML;
+        var tmpl = document.getElementById("template-cluster-info");
+        if (tmpl) {
+          el = document.createElement("div");
+          el.className = "x";
+          el.innerHTML = tmpl.innerHTML;
 
-        rt.parentElement.insertBefore(el, rt.nextSibling);
+          rt.parentElement.insertBefore(el, rt.nextSibling);
 
-	clusterInfoFetch(clusterInfoRender);
+          fetchBranchFile(a.baseURI, 'master', 'cb-config.yaml', cbConfigYaml => {
+             cbConfigFetched(a.baseURI, cbConfigYaml);
+          })
 
-        console.log("xmain ready... done");
+          console.log("xmain ready... done");
 
-        return; // Success.
+          return; // Success.
+        }
       }
     }
   }
@@ -40,33 +45,38 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  function clusterInfoFetch(andThen) {
-    var a = document.querySelector('.repository.file.list .repo-header .repo-title.breadcrumb a');
-    if (a) {
-      fetch(a.baseURI + '/raw/branch/master/cb-config.yaml')
-      .then(response => response.text())
-      .then(andThen);
-    }
+  function fetchBranchFile(baseURI, branch, file, callback) {
+    fetch(baseURI + '/raw/branch/' + branch + '/' + file)
+    .then(response => response.text())
+    .then(callback);
   }
 
-  function clusterInfoRender(text) {
-    var y = jsyaml.safeLoadAll(text);
+  function cbConfigFetched(baseURI, cbConfigYaml) {
+    var cbConfig = jsyaml.safeLoadAll(cbConfigYaml);
 
-    var el = document.getElementById("cluster-config");
+    fetch('/x/static/catalog.yaml')
+    .then(response => response.text())
+    .then(catalogYaml => {
+      var catalog = jsyaml.safeLoad(catalogYaml);
 
-    var count = 0;
+      console.log(catalog);
 
-    var ClusterConfig = {
-      view: function() {
-        return m("main", [
-          m("h3", "Cluster Config"),
-          m("pre", JSON.stringify(y)),
-          m("button", {onclick: function() {count++}}, count + " clicks"),
-        ]);
-      }
-    };
+      var el = document.getElementById("cluster-config");
 
-    m.mount(el, ClusterConfig);
+      var count = 0;
+
+      var ClusterConfig = {
+        view: function() {
+          return m("main", [
+            m("h3", "Cluster Config"),
+            m("pre", JSON.stringify(cbConfig)),
+            m("button", {onclick: function() {count++}}, count + " clicks"),
+          ]);
+        }
+      };
+
+      m.mount(el, ClusterConfig);
+    });
   }
 });
 
