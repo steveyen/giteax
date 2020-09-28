@@ -1,11 +1,32 @@
-PREFIX-userTeam__repo__branch__nameOptional
+PREFIX-userOrg__repo__branch__nameOptional
   plus label / annotation
 
-kcb-steve__cluster-1__master__
+cbs-steve__cluster-1__master__
 
 cb-config.yaml
-  => cb-ez-tool => cb-config.real.yaml => kubectl create -f -
+  => cb-config-plan (JS, w/ catalog input, also validates)
+  => cb-config-ui   (JS, w/ catalog input,
+                     uses cb-config-plan)
 
+  => cb-config-approve (billing workflow)
+
+  => cbs-reconcile (uses cb-config-check)
+       -catalog ./catalog
+       -name-prefix cbs
+       -name steve/cluster-1/master
+       -labels git-ref=g12344321,git-userOrg=steve,git-repo=cluster-1,git-branch=master
+       cb-config.yaml
+     => cbs-config.yaml
+        => kubectl create -f -
+        => kubectl replace -f -
+
+  => cbs-reconcile-workers
+
+=> kubectl delete -f -
+
+kubectl get
+kubectl describe
+  => cb-status'es
 
 
 which k8s cluster?

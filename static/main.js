@@ -27,14 +27,27 @@ $(document).ready(async () => {
 
         rt.parentElement.insertBefore(el, rt.nextSibling);
 
+	clusterInfoFetch();
+
         console.log("xmain ready... done");
 
-        return;
+        return; // Success.
       }
     }
   }
 
   document.body.className = document.body.className + " x-none";
 
-  console.log("xmain ready... done (disabled)");
+  // -----------------------------------------------------------
+
+  function clusterInfoFetch() {
+    var a = document.querySelector('.repository.file.list .repo-header .repo-title.breadcrumb a');
+    if (a) {
+      fetch(a.baseURI + '/raw/branch/master/cb-config.yaml')
+      .then(response => response.text())
+      .then(text => {
+        document.getElementById("cluster-config-raw").innerText = text;
+      });
+    }
+  }
 });
