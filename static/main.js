@@ -51,6 +51,8 @@ $(document).ready(async () => {
     .then(callback);
   }
 
+  // -----------------------------------------------------------
+
   function cbConfigFetched(baseURI, cbConfigYaml) {
     var cbConfig = jsyaml.safeLoadAll(cbConfigYaml);
 
@@ -59,24 +61,78 @@ $(document).ready(async () => {
     .then(catalogYaml => {
       var catalog = jsyaml.safeLoad(catalogYaml);
 
-      console.log(catalog);
-
       var el = document.getElementById("cluster-config");
-
-      var count = 0;
-
-      var ClusterConfig = {
-        view: function() {
-          return m("main", [
-            m("h3", "Cluster Config"),
-            m("pre", JSON.stringify(cbConfig)),
-            m("button", {onclick: function() {count++}}, count + " clicks"),
-          ]);
-        }
-      };
-
-      m.mount(el, ClusterConfig);
+      if (el) {
+        cbConfigCatalogUI(cbConfig, catalog, el);
+      }
     });
   }
-});
 
+  function cbConfigCatalogUI(cbConfig, catalog, el) {
+    if (!cbConfigCatalogValidate(cbConfig, catalog)) {
+      m.render(el, [
+        m("h3", "Cluster Config (unvalidated)"),
+        m("pre", jsyaml.dump(cbConfig)),
+      ]);
+
+      return;
+    }
+
+    var edit;
+
+    function editStart() {
+      edit = JSON.parse(JSON.stringify(cbConfig[0]));
+    }
+
+    function editSubmit() {
+      cbConfig[0] = edit;
+      edit = null;
+    }
+
+    var ClusterConfig = {
+      view: function() {
+        return m("div", [
+          m("h3", "Cluster Config"),
+          edit
+          ? m(".edit", [
+              m(".fields", [
+                m("label", {forHtml: "nodes"}, [
+                  "nodes: ",
+                  m("input", {type: "input", name: "nodes",
+                              oninput: (e) => {
+                                edit.spec.nodes = e.target.value;
+                              },
+                              value: edit.spec.nodes}),
+                ]),
+              ]),
+              m(".controls", [
+                m("button", {onclick: editSubmit}, "submit"),
+                m("button", {onclick: () => { edit = null; }}, "cancel"),
+              ]),
+            ])
+          : m(".view", [
+              m(".fields", [
+                m("label", "nodes: " + cbConfig[0].spec.nodes),
+              ]),
+              m(".controls", [
+                m("button", {onclick: editStart}, "edit"),
+              ]),
+            ]),
+        ]);
+      }
+    };
+
+    m.mount(el, ClusterConfig);
+  }
+
+  function cbConfigCatalogValidate(cbConfig, catalog) {
+    if (cbConfig.length == 1 &&
+        catalog[cbConfig[0].apiVersion] &&
+        cbConfig[0].spec &&
+        cbConfig[0].spec.nodes > 0) {
+      return true;
+    }
+
+    return false;
+  }
+});
