@@ -2,6 +2,15 @@
   font-weight: bold;
 }
 
+.x .cluster-config .view .catalogItemName {
+  margin-bottom: 10px;
+}
+
+.x .cluster-config .view .pane {
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
 .x .cluster-config .edit .edit-panes {
   display: flex;
   flex-direction: row;
@@ -37,4 +46,14 @@
 
 .x .cluster-config .edit .edit-panes > ul > li {
   list-style: none;
+  margin-bottom: 20px;
+}
+
+.x .cluster-config .edit .controls {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.x .cluster-config .edit .controls button {
+  margin-right: 10px;
 }

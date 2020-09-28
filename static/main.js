@@ -156,14 +156,15 @@ $(document).ready(async () => {
                 m("button", {onclick: () => { edit = null; }}, "cancel")))
           : m(".view",
               m(".catalogItemName", catalog[chk.catalogKey].name),
-              m(".catalogItemDesc", catalog[chk.catalogKey].desc),
-              m("ul.catalogItemDesc",
-                catalog[chk.catalogKey].descList.map((f) => {
-                  return m("li", f);
-                })),
-              chk.cbConfig.map((c) =>
-                m(".fields",
-                  m("label", "nodes: " + c.spec.nodes))),
+              m(".pane",
+                m(".catalogItemDesc", catalog[chk.catalogKey].desc),
+                m("ul.catalogItemDesc",
+                  catalog[chk.catalogKey].descList.map((f) => {
+                    return m("li", f);
+                  })),
+                chk.cbConfig.map((c) =>
+                  m(".fields",
+                    m("label", "nodes: " + c.spec.nodes)))),
               m(".controls",
                 m("button", {onclick: editStart}, "edit"))))
       }
