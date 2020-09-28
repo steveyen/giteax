@@ -160,17 +160,41 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   function cbConfigCatalogCheck(cbConfig, catalog) {
+    console.log("cbConfigCatalogCheck", cbConfig);
+
     var rv = {
       catalogKey: null,
       cbConfig: JSON.parse(JSON.stringify(cbConfig)),
-      errs: [],
     };
 
-    if (cbConfig.length == 1 &&
-        catalog[cbConfig[0].apiVersion] &&
-        cbConfig[0].spec &&
-        cbConfig[0].spec.nodes > 0) {
-      rv.catalogKey = cbConfig[0].apiVersion;
+    if (!rv.cbConfig || rv.cbConfig.length <= 0) {
+      rv.catalogKey = "ez.couchbase.com/v1"
+      rv.cbConfig = [{
+        apiVersion: "ez.couchbase.com/v1",
+        spec: { nodes: 0 },
+      }];
+    }
+
+    for (var k in catalog) {
+      if (rv.catalogKey) { break; }
+
+      v = catalog[k];
+
+      if (Object.keys(v.cbConfig).length != rv.cbConfig.length) {
+        continue;
+      }
+
+      var matched = 0;
+
+      rv.cbConfig.forEach((c) => {
+        if (v.cbConfig[c.apiVersion]) {
+          matched += 1;
+        }
+      });
+
+      if (matched == rv.cbConfig.length) {
+        rv.catalogKey = k;
+      }
     }
 
     return rv;

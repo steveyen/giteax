@@ -4,8 +4,14 @@ ez.couchbase.com/v1:
         or for small, simple app deployments.
   descFeatures:
     - simple
-    - happy
-    - yada
+    - easy
+  cbConfig:
+    ez.couchbase.com/v1:
+      spec:
+        nodes: 0
+        ^nodes:
+          range: 1..3
+
 ez.couchbase.com/v2:
   name: EZ Couchbase Cluster V2
   desc: For test-drive and development purposes,
@@ -14,3 +20,9 @@ ez.couchbase.com/v2:
     - foobar
     - happy
     - yada
+  cbConfig:
+    ez.couchbase.com/v2:
+      spec:
+        nodes: 0
+        ^nodes:
+          range: 1..4
