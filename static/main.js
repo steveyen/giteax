@@ -106,15 +106,13 @@ $(document).ready(async () => {
               m("ul", catalogKeys.map((k) => {
                 var v = catalog[k];
                 return m("li",
-                         m("label", [
+                         m("label",
                            m("input[type=radio][name=catalogKey]",
                              {checked: k == edit.catalogKey}),
-                           m("span", v.name),
-                           m("div", v.desc),
-                           m("ul", v.descFeatures.map((f) => {
-                             return m("li", f);
-                           })),
-                         ]));
+                           m(".catalogItemName", v.name),
+                           m(".catalogItemDesc", v.desc),
+                           m("ul.catalogItemDesc",
+                             v.descList.map((f) => m("li", f)))));
               })),
               edit.cbConfig.map((c) => {
                 return m(".fields", [
@@ -137,18 +135,15 @@ $(document).ready(async () => {
           : m(".view", [
               m("h3.catalogItemName", catalog[chk.catalogKey].name),
               m(".catalogItemDesc", catalog[chk.catalogKey].desc),
-              m("ul.catalogItemDescFeatures",
-                catalog[chk.catalogKey].descFeatures.map((f) => {
+              m("ul.catalogItemDesc",
+                catalog[chk.catalogKey].descList.map((f) => {
                   return m("li", f);
                 })),
-              chk.cbConfig.map((c) => {
-                return m(".fields", [
-                         m("label", "nodes: " + c.spec.nodes),
-                       ]);
-              }),
-              m(".controls", [
-                m("button", {onclick: editStart}, "edit"),
-              ])
+              chk.cbConfig.map((c) =>
+                m(".fields",
+                  m("label", "nodes: " + c.spec.nodes))),
+              m(".controls",
+                m("button", {onclick: editStart}, "edit")),
             ])
         ]);
       }
@@ -163,37 +158,45 @@ $(document).ready(async () => {
     console.log("cbConfigCatalogCheck", cbConfig);
 
     var rv = {
+      // What we think is a matching catalog item
+      // that represents the cbConfig.
       catalogKey: null,
+
+      // Our cleaned up, processed version of the cbConfig,
+      // perhaps with default value initializations and/or
+      // perhaps with error / hint validation messages.
       cbConfig: JSON.parse(JSON.stringify(cbConfig)),
     };
 
     if (!rv.cbConfig || rv.cbConfig.length <= 0) {
-      rv.catalogKey = "ez.couchbase.com/v1"
       rv.cbConfig = [{
         apiVersion: "ez.couchbase.com/v1",
         spec: { nodes: 0 },
       }];
     }
 
-    for (var k in catalog) {
+    for (var catalogKey in catalog) {
       if (rv.catalogKey) { break; }
 
-      v = catalog[k];
-
-      if (Object.keys(v.cbConfig).length != rv.cbConfig.length) {
-        continue;
-      }
+      catalogItem = catalog[catalogKey];
 
       var matched = 0;
+      var unknown = 0;
 
       rv.cbConfig.forEach((c) => {
-        if (v.cbConfig[c.apiVersion]) {
+        console.log(c);
+        if (catalogItem.cbConfig[(c.apiVersion || "") + "/" +
+                                 (c.kind || "")]) {
           matched += 1;
+
+	  return;
         }
+
+        unknown += 1;
       });
 
-      if (matched == rv.cbConfig.length) {
-        rv.catalogKey = k;
+      if (matched >= 1 && unknown <= 0) {
+        rv.catalogKey = catalogKey;
       }
     }
 

@@ -2,11 +2,11 @@ ez.couchbase.com/v1:
   name: EZ Couchbase Cluster
   desc: For test-drive and development purposes,
         or for small, simple app deployments.
-  descFeatures:
+  descList:
     - simple
     - easy
   cbConfig:
-    ez.couchbase.com/v1:
+    ez.couchbase.com/v1/:
       spec:
         nodes: 0
         ^nodes:
@@ -16,12 +16,12 @@ ez.couchbase.com/v2:
   name: EZ Couchbase Cluster V2
   desc: For test-drive and development purposes,
         or for small, simple app deployments, etc.
-  descFeatures:
+  descList:
     - foobar
     - happy
     - yada
   cbConfig:
-    ez.couchbase.com/v2:
+    ez.couchbase.com/v2/:
       spec:
         nodes: 0
         ^nodes:
