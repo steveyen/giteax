@@ -77,6 +77,8 @@ function cbConfigDictFill(cbConfig, catalog) {
         if (!s.startsWith('^') &&
             typeof(d[ak].spec[s]) == "undefined") {
           d[ak].spec[s] ||= spec[s];
+
+          specCheck(d[ak].spec, s, spec);
         }
       });
     });
@@ -114,8 +116,6 @@ function cbConfigDictTake(cbConfigDict, catalog, catalogKey) {
 
     return o;
   })
-
-  return rv;
 }
 
 // -----------------------------------------------------------
@@ -123,15 +123,40 @@ function cbConfigDictTake(cbConfigDict, catalog, catalogKey) {
 var specChecks = {
   range: function(spec, key, meta) {
     var parts = meta.range.split("..");
-    if (spec[key] < parts[0] || spec[key] > parts[1]) {
-      specErr(spec, key, "invalid range: " + meta.range);
+
+    var f = checkInt(parts[0]) ? parseInt : (x) => x;
+    if (f(spec[key]) < f(parts[0])) {
+      return specErr(spec, key, "invalid range: " + meta.range);
+    }
+
+    var f = checkInt(parts[1]) ? parseInt : (x) => x;
+    if (f(spec[key]) > f(parts[1])) {
+      return specErr(spec, key, "invalid range: " + meta.range);
     }
   }
 };
 
-function specErr(spec, key, err) {
+function specCheck(spec, key, specCatalog) {
   var mkey = '^' + key;
+
+  delete spec[mkey];
+
+  Object.keys(specCatalog[mkey] || {}).forEach((k) => {
+    var check = specChecks[k];
+    if (check) {
+      check(spec, key, specCatalog[mkey]);
+    }
+  });
+}
+
+function specErr(spec, key, msg) {
+  var mkey = '^' + key;
+
   spec[mkey] ||= {};
   spec[mkey].errs ||= [];
-  spec[mkey].errs.push("invalid range: " + meta.range);
+  spec[mkey].errs.push(msg);
+}
+
+function checkInt(s) {
+  return parseInt(s).toString() == s;
 }

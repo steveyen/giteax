@@ -159,10 +159,14 @@ $(document).ready(async () => {
                             var kaks = k + ":" + ak + ":" + s;
                             return m('label[for="' + kaks + '"]',
                               s + ": ",
+                              m('span.err',
+                                ((d[ak].spec['^' + s] || {}).errs || []).join('. ')),
                               m('input[type=input]', {
                                 id: kaks,
                                 oninput: (e) => {
                                   d[ak].spec[s] = e.target.value;
+
+                                  specCheck(d[ak].spec, s, v.cbConfigDict[ak].spec);
                                 },
                                 value: d[ak].spec[s] || "",
                                 placeholder: v.cbConfigDict[ak].spec['^' + s] &&
