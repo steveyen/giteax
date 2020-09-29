@@ -104,8 +104,34 @@ function cbConfigDictTake(cbConfigDict, catalog, catalogKey) {
     o.apiVersion ||= akp[0];
     o.kind ||= akp[1];
 
+    if (o.spec) {
+      Object.keys(o.spec).forEach((k) => {
+        if (k.startsWith('^')) {
+          delete o.spec[k];
+        }
+      });
+    }
+
     return o;
   })
 
   return rv;
+}
+
+// -----------------------------------------------------------
+
+var specChecks = {
+  range: function(spec, key, meta) {
+    var parts = meta.range.split("..");
+    if (spec[key] < parts[0] || spec[key] > parts[1]) {
+      specErr(spec, key, "invalid range: " + meta.range);
+    }
+  }
+};
+
+function specErr(spec, key, err) {
+  var mkey = '^' + key;
+  spec[mkey] ||= {};
+  spec[mkey].errs ||= [];
+  spec[mkey].errs.push("invalid range: " + meta.range);
 }
