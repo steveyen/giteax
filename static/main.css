@@ -70,6 +70,10 @@
   display: block;
 }
 
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label input.mdsSpec {
+  width: 30em;
+}
+
 .x .cluster-config .edit .edit-cols > ul.edit-panels > li label .desc {
   font-size: 7pt;
   font-style: italic;

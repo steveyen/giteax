@@ -178,6 +178,7 @@ $(document).ready(async () => {
                               ((d[ak].spec[ms] || {}).errs || []).join('. ')),
                             m('input[type=' + type + ']', {
                               id: kaks,
+                              className: s,
                               oninput: (e) => {
                                 if (e.target.type == "checkbox") {
                                   d[ak].spec[s] = e.target.checked;
@@ -191,7 +192,8 @@ $(document).ready(async () => {
                               value: d[ak].spec[s] || "",
                               placeholder: mspec.placeholder || "",
                             }),
-                            m('.desc', mspec.desc || (mspec.placeholder && ("Example: " + mspec.placeholder))));
+                            m('.desc', mspec.desc ||
+                              (mspec.placeholder && ("Example: " + mspec.placeholder))));
                         }));
                       }));
                 })),
