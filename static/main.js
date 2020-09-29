@@ -106,6 +106,7 @@ $(document).ready(async () => {
 
       setTimeout(function() {
         document.getElementById('catalogKey-' + curr.catalogKey)
+          .parentElement.parentElement.parentElement
           .scrollIntoView();
       }, 200);
     }
@@ -162,6 +163,7 @@ $(document).ready(async () => {
                   return m("li.index-" + i,
                     m(".catalogItemName",
                       m.trust(v.name.replace(", with ", ",<br>with "))),
+                    m(".descShort", v.descShort),
                     Object.keys(v.cbConfigDict).map((ak) => {
                       return m(".fields",
                         Object.keys(v.cbConfigDict[ak].spec).map((s) => {

@@ -4,6 +4,9 @@ ez-learn.couchbase/v1:
   descList:
     - A single node of Couchbase Server with low-footprint settings.
     - No backups configured.
+  descShort: >-
+    This configuration is a single node of Couchbase Server
+    for test-drives and learning -- with nothing extra to configure.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
