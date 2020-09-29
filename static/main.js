@@ -9,7 +9,8 @@ $(document).ready(async () => {
   if (document.getElementById("repo-files-table")) {
     var rt = document.getElementById("repo-topics");
     if (rt) {
-      var a = document.querySelector('.repository.file.list .repo-header .repo-title.breadcrumb a');
+      var a = document.querySelector(
+        '.repository.file.list .repo-header .repo-title.breadcrumb a');
       if (a) {
         var lb = document.createElement("label");
         lb.className = "x";
@@ -32,9 +33,10 @@ $(document).ready(async () => {
 
           rt.parentElement.insertBefore(el, rt.nextSibling);
 
-          fetchBranchFile(a.baseURI, 'master', 'cb-config.yaml', cbConfigYaml => {
-             onCbConfigFetched(a.baseURI, cbConfigYaml);
-          })
+          fetchBranchFile(a.baseURI,
+            'master', 'cb-config.yaml', cbConfigYaml => {
+              onCbConfigFetched(a.baseURI, cbConfigYaml);
+            });
 
           console.log("xmain ready... done");
 
@@ -43,6 +45,8 @@ $(document).ready(async () => {
       }
     }
   }
+
+  // Fall-thru on errors to disabling 'x' extensions.
 
   document.body.className = document.body.className + " x-none";
 
@@ -102,6 +106,10 @@ $(document).ready(async () => {
 
     function editSubmit() {
       chk = JSON.parse(JSON.stringify(edit));
+
+      chk.cbConfig = cbConfigDictTake(
+         chk.cbConfigDict, catalog, chk.catalogKey);
+
       chk.cbConfigDict = cbConfigDictFill(chk.cbConfig, catalog);
 
       edit = null;
@@ -284,4 +292,27 @@ function cbConfigDictFill(cbConfig, catalog) {
   });
 
   return d;
+}
+
+// Retrieves a cbConfig from a cbConfigDict, driven
+// from the metadata from a catalog and a catalogKey.
+function cbConfigDictTake(cbConfigDict, catalog, catalogKey) {
+  var d = {};
+
+  Object.keys(catalog[catalogKey].cbConfigDict).forEach((ak) => {
+    d[ak] = Object.assign(d[ak] || {}, cbConfigDict[ak] || {});
+  })
+
+  return Object.keys(d).map((ak) => {
+    var o = JSON.parse(JSON.stringify(d[ak]));
+
+    var akp = ak.split(':');
+
+    o.apiVersion ||= akp[0];
+    o.kind ||= akp[1];
+
+    return o;
+  })
+
+  return rv;
 }
