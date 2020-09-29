@@ -165,6 +165,8 @@ $(document).ready(async () => {
                                   d[ak].spec[s] = e.target.value;
                                 },
                                 value: d[ak].spec[s] || "",
+                                placeholder: v.cbConfigDict[ak].spec['^' + s] &&
+                                             v.cbConfigDict[ak].spec['^' + s].prompt
                               }));
                           }));
                         }));
