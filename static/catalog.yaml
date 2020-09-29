@@ -21,12 +21,12 @@ ez-medium.couchbase.com/v2:
     - happy
     - totally secure'ish
   cbConfigDict:
-    "foo.couchbase.com/v2:":
+    "ez.couchbase.com/v1:":
       spec:
         nodes: 0
         ^nodes:
           range: 1..4
-    "bar.couchbase.com/v2:frazzy":
+    "bar.couchbase.com/v2:frazy":
       spec:
         bar-nodes: 0
         ^bar-nodes:
@@ -44,12 +44,12 @@ ez-large.couchbase.com/v2:
     - much larger than small
     - larger than medium
   cbConfigDict:
-    "bar.couchbase.com/v2:":
+    "bar.couchbase.com/v2:frazy":
       spec:
         bar-nodes: 0
         ^bar-nodes:
-          range: 1..4
-    "baz.couchbase.com/v2:frazzy":
+          range: 1..5
+    "baz.couchbase.com/v2:fizzy":
       spec:
         baz-nodes: 0
         ^baz-nodes:

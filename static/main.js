@@ -86,6 +86,8 @@ $(document).ready(async () => {
       return;
     }
 
+    chk.cbConfigDict = cbConfigDictFill(chk.cbConfig, catalog);
+
     var catalogKeys = [];
     for (var k in catalog) {
       catalogKeys.push(k);
@@ -95,10 +97,12 @@ $(document).ready(async () => {
 
     function editStart() {
       edit = JSON.parse(JSON.stringify(chk));
+      edit.cbConfigDict = cbConfigDictFill(edit.cbConfig, catalog);
     }
 
     function editSubmit() {
-      chk = edit;
+      chk = JSON.parse(JSON.stringify(edit));
+      chk.cbConfigDict = cbConfigDictFill(chk.cbConfig, catalog);
 
       edit = null;
     }
@@ -132,25 +136,24 @@ $(document).ready(async () => {
                 })),
                 m("ul.edit-panels", catalogKeys.map((k, i) => {
                   var v = catalog[k];
-                  var d = cbConfigToDict(edit.cbConfig);
+                  var d = edit.cbConfigDict;
                   return m("li.index-" + i,
                     m(".catalogItemName", v.name),
                       Object.keys(v.cbConfigDict).map((ak) => {
                         return m(".fields",
-                          Object.keys(v.cbConfigDict[ak].spec).map((f) => {
-                            if (f.startsWith('^')) {
+                          Object.keys(v.cbConfigDict[ak].spec).map((s) => {
+                            if (s.startsWith('^')) {
                               return;
                             }
-                            return m('label[for="' + f + '"]',
-                              f + ": ",
+                            var kaks = k + ":" + ak + ":" + s;
+                            return m('label[for="' + kaks + '"]',
+                              s + ": ",
                               m('input[type=input]', {
-                                id: f,
+                                id: kaks,
                                 oninput: (e) => {
-                                  edit.cbConfig.spec ||= {};
-                                  edit.cbConfig.spec[f] = e.target.value;
+                                  d[ak].spec[s] = e.target.value;
                                 },
-                                value: (edit.cbConfig.spec &&
-                                        edit.cbConfig.spec[f]) || "",
+                                value: d[ak].spec[s] || "",
                               }));
                           }));
                         }));
@@ -169,20 +172,28 @@ $(document).ready(async () => {
                   {onclick: editSubmit}, "Submit"),
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
-          : m(".view",
-              m(".catalogItemName", catalog[chk.catalogKey].name),
+          : m(".view", (function(v) { return [
+              m(".catalogItemName", v.name),
               m(".pane",
-                m(".catalogItemDesc", catalog[chk.catalogKey].desc),
+                m(".catalogItemDesc", v.desc),
                 m("ul.catalogItemDesc",
-                  catalog[chk.catalogKey].descList.map((f) => {
-                    return m("li", f);
-                  })),
-                chk.cbConfig.map((c) =>
-                  m(".fields",
-                    m("label", "nodes: " + c.spec.nodes)))),
+                  v.descList.map((f) => m("li", f))),
+                m(".fields",
+                  Object.keys(v.cbConfigDict).map((ak) =>
+                    Object.keys(v.cbConfigDict[ak].spec).map((s) => {
+                      if (s.startsWith('^')) {
+                        return;
+                      }
+                      return m("div",
+                        s + ": " + (chk.cbConfigDict &&
+                                    chk.cbConfigDict[ak] &&
+                                    chk.cbConfigDict[ak].spec &&
+                                    chk.cbConfigDict[ak].spec[s]));
+                    })))),
               m(".controls",
                 m("button.ui.button",
-                  {onclick: editStart}, "Modify"))))
+                  {onclick: editStart}, "Modify"))
+            ]})(catalog[chk.catalogKey])));
       }
     };
 
@@ -244,11 +255,32 @@ function cbCatalogCheck(cbConfig, catalog) {
 
 // -----------------------------------------------------------
 
-function cbConfigToDict(cbConfig) {
+// Returns a 'cbConfigDict' object initially popullated
+// by cbConfig, but also filled in with other default
+// values from the catalog.
+function cbConfigDictFill(cbConfig, catalog) {
   var d = {}; // Keyed by "apiVersion:kind".
 
   cbConfig.forEach((c) => {
     d[(c.apiVersion || "") + ":" + (c.kind || "")] = c;
+  });
+
+  Object.keys(catalog).forEach((ck) => {
+    var cv = catalog[ck];
+
+    Object.keys(cv.cbConfigDict).forEach((ak) => {
+      d[ak] ||= {};
+      d[ak].spec ||= {};
+
+      var spec = cv.cbConfigDict[ak].spec;
+
+      Object.keys(spec).forEach((s) => {
+        if (!s.startsWith('^') &&
+            typeof(d[ak].spec[s]) == "undefined") {
+          d[ak].spec[s] ||= spec[s];
+        }
+      });
+    });
   });
 
   return d;
