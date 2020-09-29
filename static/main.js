@@ -170,18 +170,24 @@ $(document).ready(async () => {
                           }
                           var ms = '^' + s;
                           var mspec = v.cbConfigDict[ak].spec[ms] || {};
+                          var type = typeof(v.cbConfigDict[ak].spec[s]) == "boolean" ? "checkbox" : "input";
                           var kaks = k + ":" + ak + ":" + s;
                           return m('label[for="' + kaks + '"]',
                             (mspec.label || s) + ": ",
                             m('span.err',
                               ((d[ak].spec[ms] || {}).errs || []).join('. ')),
-                            m('input[type=input]', {
+                            m('input[type=' + type + ']', {
                               id: kaks,
                               oninput: (e) => {
-                                d[ak].spec[s] = e.target.value;
+                                if (e.target.type == "checkbox") {
+                                  d[ak].spec[s] = e.target.checked;
+                                } else {
+                                  d[ak].spec[s] = e.target.value;
+                                }
 
                                 specCheck(d[ak].spec, s, v.cbConfigDict[ak].spec);
                               },
+                              checked: d[ak].spec[s],
                               value: d[ak].spec[s] || "",
                               placeholder: mspec.placeholder || "",
                             }),

@@ -9,6 +9,7 @@ ez-learn.couchbase/v1:
       spec:
         nodes: 1
         ^nodes:
+          label: Nodes
           placeholder: 1
           range: 1..1
 
@@ -22,6 +23,7 @@ ez-micro.couchbase/v1:
       spec:
         nodes: 1
         ^nodes:
+          label: Nodes in the cluster
           placeholder: 1, 2
           range: 1..2
 
@@ -35,6 +37,7 @@ ez-small.couchbase/v1:
       spec:
         nodes: 3
         ^nodes:
+          label: Nodes in the cluster
           placeholder: 1, 2, 3
           range: 1..3
 
@@ -48,6 +51,7 @@ ez-medium.couchbase/v1:
       spec:
         nodes: 5
         ^nodes:
+          label: Nodes in the cluster
           placeholder: 1, 2, ... 5
           range: 1..5
 
@@ -62,9 +66,12 @@ ez-large.couchbase/v1:
       spec:
         nodes: 7
         ^nodes:
+          label: Full-service or data-only nodes in the cluster
           placeholder: 1, 2, ... 7
           range: 1..7
         nodesDataOnly: false
+        ^nodesDataOnly:
+          label: The above nodes are data-only nodes
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
@@ -87,9 +94,12 @@ ez-large-mobile.couchbase/v1:
       spec:
         nodes: 7
         ^nodes:
+          label: Full-service or data-only nodes in the cluster
           placeholder: 1, 2, ... 7
           range: 1..7
         nodesDataOnly: false
+        ^nodesDataOnly:
+          label: The above nodes are data-only nodes
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
@@ -97,7 +107,7 @@ ez-large-mobile.couchbase/v1:
           label: Additional non-data service nodes
           placeholder: 'query,index,fts;query;query'
           mdsSpecMax: 5
-          mdsSpecAllow: query,index,fts
+          mdsSpecAllow: query,index,fts,eventing
     "ez-sgw.couchbase/v1:":
       spec:
         sgwNodes: 1
