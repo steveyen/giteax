@@ -64,7 +64,7 @@ ez-large.couchbase/v1:
         ^nodes:
           placeholder: 1-to-7
           range: 1..7
-        kvOnly: false
+        nodesKVOnly: false
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
@@ -85,7 +85,7 @@ ez-large-mobile.couchbase/v1:
         ^nodes:
           placeholder: 1-to-7
           range: 1..7
-        kvOnly: false
+        nodesKVOnly: false
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
@@ -93,7 +93,7 @@ ez-large-mobile.couchbase/v1:
           placeholder: 'query,index,fts;query;query'
     "ez-sgw.couchbase/v1:":
       spec:
-        nodes: 1
-        ^nodes:
+        sgwNodes: 1
+        ^sgwNodes:
           placeholder: 1-to-5
           range: 1..5

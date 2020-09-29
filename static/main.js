@@ -104,12 +104,10 @@ $(document).ready(async () => {
       edit = JSON.parse(JSON.stringify(curr));
       edit.cbConfigDict = cbConfigDictFill(edit.cbConfig, catalog);
 
-      if (catalogKeys.indexOf(curr.catalogKey) >=2) {
-        setTimeout(function() {
-          document.getElementById('catalogKey-' + curr.catalogKey)
-            .scrollIntoView();
-        }, 200);
-      }
+      setTimeout(function() {
+        document.getElementById('catalogKey-' + curr.catalogKey)
+          .scrollIntoView();
+      }, 200);
     }
 
     function editSubmit() {
@@ -131,7 +129,7 @@ $(document).ready(async () => {
           ? m(".edit", // When in edit mode.
               m("div",
                 {className: "edit-panes index-" + catalogKeys.indexOf(edit.catalogKey)},
-                // List of catalog items.
+                // List of catalog items as radio buttons.
                 m("ul.catalogItems", catalogKeys.map((k, i) => {
                   var v = catalog[k];
                   return m("li.index-" + i,
@@ -155,7 +153,9 @@ $(document).ready(async () => {
                         m("ul.catalogItemDesc",
                           v.descList.map((f) => m("li", f))))));
                 })),
-                // Matching list of edit panels, one per catalog item.
+                // Matching list of edit panels, one per catalog item,
+                // which will be hidden/shown based on the currently
+                // selected catalog item.
                 m("ul.edit-panels", catalogKeys.map((k, i) => {
                   var v = catalog[k];
                   var d = edit.cbConfigDict;
@@ -167,11 +167,15 @@ $(document).ready(async () => {
                             if (s.startsWith('^')) {
                               return;
                             }
+                            var ms = '^' + s;
+                            var placeholder =
+                                v.cbConfigDict[ak].spec[ms] &&
+                                v.cbConfigDict[ak].spec[ms].placeholder;
                             var kaks = k + ":" + ak + ":" + s;
                             return m('label[for="' + kaks + '"]',
                               s + ": ",
                               m('span.err',
-                                ((d[ak].spec['^' + s] || {}).errs || []).join('. ')),
+                                ((d[ak].spec[ms] || {}).errs || []).join('. ')),
                               m('input[type=input]', {
                                 id: kaks,
                                 oninput: (e) => {
@@ -180,8 +184,7 @@ $(document).ready(async () => {
                                   specCheck(d[ak].spec, s, v.cbConfigDict[ak].spec);
                                 },
                                 value: d[ak].spec[s] || "",
-                                placeholder: v.cbConfigDict[ak].spec['^' + s] &&
-                                             v.cbConfigDict[ak].spec['^' + s].placeholder
+                                placeholder: placeholder,
                               }));
                           }));
                         }));
