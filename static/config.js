@@ -124,12 +124,18 @@ var specChecks = {
   range: function(spec, key, meta) {
     var parts = meta.range.split("..");
 
-    var f = checkInt(parts[0]) ? parseInt : (x) => x;
+    var haveInt = checkInt(spec[key]);
+    var wantInt = checkInt(parts[0]) || checkint(parts[1]);
+    if (wantInt != haveInt) {
+      return specErr(spec, key, "invalid range type: " + meta.range);
+    }
+
+    var f = wantInt ? parseInt : (x) => x;
+
     if (f(spec[key]) < f(parts[0])) {
       return specErr(spec, key, "invalid range: " + meta.range);
     }
 
-    var f = checkInt(parts[1]) ? parseInt : (x) => x;
     if (f(spec[key]) > f(parts[1])) {
       return specErr(spec, key, "invalid range: " + meta.range);
     }
