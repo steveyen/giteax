@@ -4,7 +4,7 @@ $(document).ready(async () => {
   console.log("xmain ready...");
 
   // If we're on the right repo file list page, in the right state,
-  // hide the repo file list behind a checkbox / toggle, and then
+  // then hide the repo file list behind a checkbox / toggle, and then
   // load the cluster-config UI panel.
   if (document.getElementById("repo-files-table")) {
     var rt = document.getElementById("repo-topics");
@@ -46,7 +46,7 @@ $(document).ready(async () => {
     }
   }
 
-  // Fall-thru on errors to disabling 'x' extensions.
+  // Fall-thru on errors to disabling the UI 'x' extensions.
 
   document.body.className = document.body.className + " x-none";
 
@@ -77,6 +77,7 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
+  // Populate the UI for cbConfig viewing & editing into the el.
   function cbConfigUI(cbConfig, catalog, el) {
     console.log("cbCatalogCheck", cbConfig, catalog);
 
@@ -120,9 +121,10 @@ $(document).ready(async () => {
         return m("div",
           m("h3", "Cluster Config"),
           edit
-          ? m(".edit",
+          ? m(".edit", // When in edit mode.
               m("div",
                 {className: "edit-panes index-" + catalogKeys.indexOf(edit.catalogKey)},
+                // List of catalog items.
                 m("ul.catalogItems", catalogKeys.map((k, i) => {
                   var v = catalog[k];
                   return m("li.index-" + i,
@@ -142,6 +144,7 @@ $(document).ready(async () => {
                       m("ul.catalogItemDesc",
                         v.descList.map((f) => m("li", f)))));
                 })),
+                // Matching list of edit panels, one per catalog item.
                 m("ul.edit-panels", catalogKeys.map((k, i) => {
                   var v = catalog[k];
                   var d = edit.cbConfigDict;
@@ -180,6 +183,8 @@ $(document).ready(async () => {
                   {onclick: editSubmit}, "Submit"),
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
+
+          // When in view mode.
           : m(".view", (function(v) { return [
               m(".catalogItemName", v.name),
               m(".pane",
@@ -188,16 +193,14 @@ $(document).ready(async () => {
                   v.descList.map((f) => m("li", f))),
                 m(".fields",
                   Object.keys(v.cbConfigDict).map((ak) =>
-                    Object.keys(v.cbConfigDict[ak].spec).map((s) => {
-                      if (s.startsWith('^')) {
-                        return;
-                      }
-                      return m("div",
+                    Object.keys(v.cbConfigDict[ak].spec).map((s) => (
+                      !s.startsWith('^') &&
+                      m("div",
                         s + ": " + (chk.cbConfigDict &&
                                     chk.cbConfigDict[ak] &&
                                     chk.cbConfigDict[ak].spec &&
-                                    chk.cbConfigDict[ak].spec[s]));
-                    })))),
+                                    chk.cbConfigDict[ak].spec[s]))
+                    ))))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify"))
@@ -208,111 +211,3 @@ $(document).ready(async () => {
     m.mount(el, ClusterConfig);
   }
 });
-
-// -----------------------------------------------------------
-
-function cbCatalogCheck(cbConfig, catalog) {
-  var rv = {
-    // Represents the best matching catalog item for the cbConfig.
-    catalogKey: null,
-
-    // The cleaned up, processed version of the cbConfig,
-    // perhaps with default value initializeds and/or
-    // perhaps with error / hint validation messages.
-    cbConfig: JSON.parse(JSON.stringify(cbConfig)),
-  };
-
-  if (!rv.cbConfig || rv.cbConfig.length <= 0) {
-    // First time creation case.
-    rv.cbConfig = [{
-      apiVersion: "ez.couchbase.com/v1",
-      spec: { nodes: 0 },
-    }];
-  }
-
-  var matchedLast = 0; // The matched # from last match.
-
-  for (var catalogKey in catalog) {
-    var catalogItem = catalog[catalogKey];
-
-    var matched = 0;
-    var unknown = 0;
-
-    rv.cbConfig.forEach((c) => {
-      if (catalogItem.cbConfigDict[(c.apiVersion || "") + ":" +
-                                   (c.kind || "")]) {
-        // TODO. Check the fields of c.
-
-        matched += 1;
-
-        return;
-      }
-
-      unknown += 1;
-    });
-
-    if (matchedLast < matched && unknown <= 0) {
-      rv.catalogKey = catalogKey;
-
-      matchedLast = matched;
-    }
-  }
-
-  return rv;
-}
-
-// -----------------------------------------------------------
-
-// Returns a 'cbConfigDict' object initially popullated
-// by cbConfig, but also filled in with other default
-// values from the catalog.
-function cbConfigDictFill(cbConfig, catalog) {
-  var d = {}; // Keyed by "apiVersion:kind".
-
-  cbConfig.forEach((c) => {
-    d[(c.apiVersion || "") + ":" + (c.kind || "")] = c;
-  });
-
-  Object.keys(catalog).forEach((ck) => {
-    var cv = catalog[ck];
-
-    Object.keys(cv.cbConfigDict).forEach((ak) => {
-      d[ak] ||= {};
-      d[ak].spec ||= {};
-
-      var spec = cv.cbConfigDict[ak].spec;
-
-      Object.keys(spec).forEach((s) => {
-        if (!s.startsWith('^') &&
-            typeof(d[ak].spec[s]) == "undefined") {
-          d[ak].spec[s] ||= spec[s];
-        }
-      });
-    });
-  });
-
-  return d;
-}
-
-// Retrieves a cbConfig from a cbConfigDict, driven
-// from the metadata from a catalog and a catalogKey.
-function cbConfigDictTake(cbConfigDict, catalog, catalogKey) {
-  var d = {};
-
-  Object.keys(catalog[catalogKey].cbConfigDict).forEach((ak) => {
-    d[ak] = Object.assign(d[ak] || {}, cbConfigDict[ak] || {});
-  })
-
-  return Object.keys(d).map((ak) => {
-    var o = JSON.parse(JSON.stringify(d[ak]));
-
-    var akp = ak.split(':');
-
-    o.apiVersion ||= akp[0];
-    o.kind ||= akp[1];
-
-    return o;
-  })
-
-  return rv;
-}
