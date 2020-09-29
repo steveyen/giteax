@@ -195,10 +195,8 @@ $(document).ready(async () => {
                               },
                               checked: d[ak].spec[s],
                               value: d[ak].spec[s] || "",
-                              placeholder: mspec.placeholder || "",
                             }),
-                            m('.desc', mspec.desc ||
-                              (mspec.placeholder && ("Examples: " + mspec.placeholder))));
+                            m('.desc', mspec.desc));
                         }));
                       }));
                 })),

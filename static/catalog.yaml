@@ -12,8 +12,7 @@ ez-learn.couchbase/v1:
       spec:
         nodes: 1
         ^nodes:
-          label: Nodes
-          placeholder: 1
+          label: '# of nodes in the cluster'
           range: 1..1
 
 ez-micro.couchbase/v1:
@@ -26,8 +25,9 @@ ez-micro.couchbase/v1:
       spec:
         nodes: 1
         ^nodes:
-          label: Nodes in the cluster
-          placeholder: 1, 2
+          label: '# of nodes in the cluster'
+          desc: >-
+            Examples: 1, 2
           range: 1..2
 
 ez-small.couchbase/v1:
@@ -40,8 +40,9 @@ ez-small.couchbase/v1:
       spec:
         nodes: 3
         ^nodes:
-          label: Nodes in the cluster
-          placeholder: 1, 2, 3
+          label: '# of nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, 3
           range: 1..3
 
 ez-medium.couchbase/v1:
@@ -54,8 +55,9 @@ ez-medium.couchbase/v1:
       spec:
         nodes: 5
         ^nodes:
-          label: Nodes in the cluster
-          placeholder: 1, 2, ... 5
+          label: '# of nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, ... 5
           range: 1..5
 
 ez-large.couchbase/v1:
@@ -69,8 +71,9 @@ ez-large.couchbase/v1:
       spec:
         nodes: 7
         ^nodes:
-          label: Full-service or data-only nodes in the cluster
-          placeholder: 1, 2, ... 7
+          label: '# of full-service or data-only nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, ... 7
           range: 1..7
         nodesDataOnly: false
         ^nodesDataOnly:
@@ -101,8 +104,9 @@ ez-large-mobile.couchbase/v1:
       spec:
         nodes: 7
         ^nodes:
-          label: Full-service or data-only nodes in the cluster
-          placeholder: 1, 2, ... 7
+          label: '# of full-service or data-only nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, ... 7
           range: 1..7
         nodesDataOnly: false
         ^nodesDataOnly:
@@ -124,5 +128,6 @@ ez-large-mobile.couchbase/v1:
         sgwNodes: 1
         ^sgwNodes:
           label: Additional Sync-Gateway nodes
-          placeholder: 1, 2, ... 5
+          desc: >-
+            Examples: 1, 2, ... 5
           range: 1..5
