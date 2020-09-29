@@ -171,8 +171,8 @@ var specChecks = {
 
     nodes.forEach((node) => {
       node.split(',').forEach((s) => {
-        if (!mdsSpecAllow[s]) {
-          specErr(spec, key, "unknown service: " + s);
+        if (!mdsSpecAllow[s.trim()]) {
+          specErr(spec, key, "unknown service: " + s.trim());
         }
       });
     });
