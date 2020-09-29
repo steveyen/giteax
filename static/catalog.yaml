@@ -46,6 +46,38 @@ ez-large.couchbase.com/v2:
     - much larger than small
     - larger than medium
   cbConfigDict:
+    "ez.couchbase.com/v1:":
+      spec:
+        nodes: 0
+        ^nodes:
+          prompt: 1, 2, 3 or 4
+          range: 1..4
+    "bar.couchbase.com/v2:frazy":
+      spec:
+        bar-nodes: 0
+        ^bar-nodes:
+          range: 1..5
+    "baz.couchbase.com/v2:fizzy":
+      spec:
+        baz-nodes: 0
+        ^baz-nodes:
+          range: 1..4
+        title: "test-cluster"
+
+ez-mobile.couchbase.com/v2:
+  name: EZ Couchbase Cluster - With Mobile (v2)
+  desc: For test-drive and development purposes,
+        or for small to medium, simple app deployments, etc.
+  descList:
+    - just like before
+    - but with mobile
+  cbConfigDict:
+    "ez.couchbase.com/v1:":
+      spec:
+        nodes: 0
+        ^nodes:
+          prompt: 1, 2, 3, 4 or 5
+          range: 1..5
     "bar.couchbase.com/v2:frazy":
       spec:
         bar-nodes: 0

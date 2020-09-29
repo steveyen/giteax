@@ -103,6 +103,12 @@ $(document).ready(async () => {
     function editStart() {
       edit = JSON.parse(JSON.stringify(chk));
       edit.cbConfigDict = cbConfigDictFill(edit.cbConfig, catalog);
+
+
+      setTimeout(function() {
+        document.getElementById('catalogKey-' + chk.catalogKey)
+          .scrollIntoView();
+      }, 200);
     }
 
     function editSubmit() {
@@ -131,7 +137,8 @@ $(document).ready(async () => {
                     m("label",
                       m(".catalogItemName",
                         m("input[type=radio][name=catalogKey]",
-                          {value: i,
+                          {id: 'catalogKey-' + k,
+                           value: i,
                            checked: k == edit.catalogKey,
                            onchange: (e) => {
                              if (e.target.checked) {
