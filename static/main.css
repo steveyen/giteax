@@ -8,14 +8,14 @@
   margin-bottom: 40px;
 }
 
-.x .cluster-config .edit .edit-panes {
+.x .cluster-config .edit .edit-cols {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.x .cluster-config .edit .edit-panes > ul.catalogItems {
+.x .cluster-config .edit .edit-cols > ul.catalogItems {
   flex-basis: 20rem;
   flex-grow: 2;
   margin-right: 50px;
@@ -25,60 +25,65 @@
   overflow-y: scroll;
 }
 
-.x .cluster-config .edit .edit-panes > ul.catalogItems > li {
+.x .cluster-config .edit .edit-cols > ul.catalogItems > li {
   border: 1px solid #ddd;
   padding: 0 0 0 0;
 }
 
-.x .cluster-config .edit .edit-panes > ul.catalogItems > li > label {
+.x .cluster-config .edit .edit-cols > ul.catalogItems > li > label {
   display: flex;
   padding: 20px 20px 20px 20px;
   flex-direction: row;
   justify-content: flex-start;
 }
 
-.x .cluster-config .edit .edit-panes > ul.catalogItems > li > label > .labelInput {
+.x .cluster-config .edit .edit-cols > ul.catalogItems > li > label > .labelInput {
   display: block;
   margin-right: 5px;
   flex-grow: 0;
 }
 
-.x .cluster-config .edit .edit-panes > ul.catalogItems > li > label > .labelMain {
+.x .cluster-config .edit .edit-cols > ul.catalogItems > li > label > .labelMain {
   flex-grow: 1;
 }
 
-.x .cluster-config .edit .edit-panes > ul.catalogItems .catalogItemDesc {
+.x .cluster-config .edit .edit-cols > ul.catalogItems .catalogItemDesc {
   margin-left: 20px;
 }
 
-.x .cluster-config .edit .edit-panes > ul.edit-panels {
+.x .cluster-config .edit .edit-cols > ul.edit-panels {
   flex-basis: 20rem;
   flex-grow: 4;
   padding-top: 20px;
 }
 
-.x .cluster-config .edit .edit-panes > ul.edit-panels > li {
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li {
   display: none;
 }
 
-.x .cluster-config .edit .edit-panes > ul.edit-panels > li label {
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label {
   display: block;
   padding: 5px 10px 5px 10px;
 }
 
-.x .cluster-config .edit .edit-panes > ul.edit-panels > li label input {
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label input {
   display: block;
 }
 
-.x .cluster-config .edit .edit-panes > ul {
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label .desc {
+  font-size: 7pt;
+  font-style: italic;
+}
+
+.x .cluster-config .edit .edit-cols > ul {
   padding-left: 0;
 }
 
-.x .cluster-config .edit .edit-panes > ul > li {
+.x .cluster-config .edit .edit-cols > ul > li {
   list-style: none;
 }
 
-.x .cluster-config .edit .edit-panes label span.err {
+.x .cluster-config .edit .edit-cols label span.err {
   margin-left: 0.7em;
   color: red;
 }

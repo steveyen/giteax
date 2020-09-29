@@ -1,5 +1,5 @@
 ez-learn.couchbase/v1:
-  name: EZ Couchbase Server
+  name: Couchbase Server Test-Drive
   desc: For test-drives, learning, tutorials and quick dev prototypes.
   descList:
     - A single node of Couchbase Server with low-footprint settings.
@@ -13,10 +13,10 @@ ez-learn.couchbase/v1:
           range: 1..1
 
 ez-micro.couchbase/v1:
-  name: EZ Couchbase Cluster - Micro
+  name: Couchbase Cluster - Micro
   desc: For test-drive, development and CI purposes.
   descList:
-    - Max of 2 nodes.
+    - Up to 2 full-service nodes.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
@@ -26,10 +26,10 @@ ez-micro.couchbase/v1:
           range: 1..2
 
 ez-small.couchbase/v1:
-  name: EZ Couchbase Cluster - Small
+  name: Couchbase Cluster - Small
   desc: For small, simple app deployments.
   descList:
-    - Max of 3 nodes.
+    - Up to 3 full-service nodes.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
@@ -39,30 +39,30 @@ ez-small.couchbase/v1:
           range: 1..3
 
 ez-medium.couchbase/v1:
-  name: EZ Couchbase Cluster - Medium
+  name: Couchbase Cluster - Medium
   desc: For medium-sized, simple app deployments.
   descList:
-    - Max of 5 nodes.
+    - Up to 5 full-service nodes.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
         nodes: 5
         ^nodes:
-          placeholder: 1-to-5
+          placeholder: 1, 2, ... 5
           range: 1..5
 
 ez-large.couchbase/v1:
-  name: EZ Couchbase Cluster - Large
-  desc: For large-sized app deployments,
-        with MDS service layout control.
+  name: Couchbase Cluster - Large
+  desc: For large-sized app deployments.
   descList:
-    - Max of 7 full or KV-only nodes.
+    - Up to 7 full-service or data-only nodes.
+    - Up to 5 additional non-data service nodes.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
         nodes: 7
         ^nodes:
-          placeholder: 1-to-7
+          placeholder: 1, 2, ... 7
           range: 1..7
         nodesKVOnly: false
     "ez-mds.couchbase/v1:":
@@ -70,20 +70,21 @@ ez-large.couchbase/v1:
         mdsSpec: ''
         ^mdsSpec:
           placeholder: 'query,index,fts;query;query'
+          mdsSpecMax: 5
 
 ez-large-mobile.couchbase/v1:
-  name: EZ Couchbase Cluster - Large, with Mobile/Edge Sync-Gateways
+  name: Couchbase Cluster - Large, with Mobile/Edge Sync-Gateways
   desc: For large-sized app deployments,
-        with MDS service layout control,
         and with Couchbase Sync-Gateway.
   descList:
-    - Max of 7 full or KV-only nodes.
+    - Up to 7 full-service or data-only nodes.
+    - Up to 5 additional non-data service nodes.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
         nodes: 7
         ^nodes:
-          placeholder: 1-to-7
+          placeholder: 1, 2, ... 7
           range: 1..7
         nodesKVOnly: false
     "ez-mds.couchbase/v1:":
@@ -91,9 +92,10 @@ ez-large-mobile.couchbase/v1:
         mdsSpec: ''
         ^mdsSpec:
           placeholder: 'query,index,fts;query;query'
+          mdsSpecMax: 5
     "ez-sgw.couchbase/v1:":
       spec:
         sgwNodes: 1
         ^sgwNodes:
-          placeholder: 1-to-5
+          placeholder: 1, 2, ... 5
           range: 1..5

@@ -128,7 +128,7 @@ $(document).ready(async () => {
           edit
           ? m(".edit", // When in edit mode.
               m("div",
-                {className: "edit-panes index-" + catalogKeys.indexOf(edit.catalogKey)},
+                {className: "edit-cols index-" + catalogKeys.indexOf(edit.catalogKey)},
                 // List of catalog items as radio buttons.
                 m("ul.catalogItems", catalogKeys.map((k, i) => {
                   var v = catalog[k];
@@ -160,41 +160,41 @@ $(document).ready(async () => {
                   var v = catalog[k];
                   var d = edit.cbConfigDict;
                   return m("li.index-" + i,
-                    m(".catalogItemName", v.name),
-                      Object.keys(v.cbConfigDict).map((ak) => {
-                        return m(".fields",
-                          Object.keys(v.cbConfigDict[ak].spec).map((s) => {
-                            if (s.startsWith('^')) {
-                              return;
-                            }
-                            var ms = '^' + s;
-                            var placeholder =
-                                v.cbConfigDict[ak].spec[ms] &&
-                                v.cbConfigDict[ak].spec[ms].placeholder;
-                            var kaks = k + ":" + ak + ":" + s;
-                            return m('label[for="' + kaks + '"]',
-                              s + ": ",
-                              m('span.err',
-                                ((d[ak].spec[ms] || {}).errs || []).join('. ')),
-                              m('input[type=input]', {
-                                id: kaks,
-                                oninput: (e) => {
-                                  d[ak].spec[s] = e.target.value;
+                    m(".catalogItemName",
+                      m.trust(v.name.replace(", with ", ",<br>with "))),
+                    Object.keys(v.cbConfigDict).map((ak) => {
+                      return m(".fields",
+                        Object.keys(v.cbConfigDict[ak].spec).map((s) => {
+                          if (s.startsWith('^')) {
+                            return;
+                          }
+                          var ms = '^' + s;
+                          var mspec = v.cbConfigDict[ak].spec[ms] || {};
+                          var kaks = k + ":" + ak + ":" + s;
+                          return m('label[for="' + kaks + '"]',
+                            s + ": ",
+                            m('span.err',
+                              ((d[ak].spec[ms] || {}).errs || []).join('. ')),
+                            m('input[type=input]', {
+                              id: kaks,
+                              oninput: (e) => {
+                                d[ak].spec[s] = e.target.value;
 
-                                  specCheck(d[ak].spec, s, v.cbConfigDict[ak].spec);
-                                },
-                                value: d[ak].spec[s] || "",
-                                placeholder: placeholder,
-                              }));
-                          }));
+                                specCheck(d[ak].spec, s, v.cbConfigDict[ak].spec);
+                              },
+                              value: d[ak].spec[s] || "",
+                              placeholder: mspec.placeholder || "",
+                            }),
+                            m('.desc', mspec.desc || (mspec.placeholder && ("Example: " + mspec.placeholder))));
                         }));
+                      }));
                 })),
                 m("style",
                   catalogKeys.map((k, i) => {
-                    return ".x .cluster-config .edit .edit-panes.index-" + i +
+                    return ".x .cluster-config .edit .edit-cols.index-" + i +
                            " > ul.catalogItems li.index-" + i +
                            " { background-color: #f4f4f4; }" +
-                           ".x .cluster-config .edit .edit-panes.index-" + i +
+                           ".x .cluster-config .edit .edit-cols.index-" + i +
                            " > ul.edit-panels li.index-" + i +
                            " { display: block; }";
                   }).join(" "))),
