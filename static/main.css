@@ -16,8 +16,9 @@
 }
 
 .x .cluster-config .edit .edit-cols > ul.catalogItems {
-  flex-basis: 20rem;
-  flex-grow: 2;
+  flex-basis: 25rem;
+  flex-grow: 1;
+  flex-shrink: 1;
   margin-right: 50px;
   max-height: 60vh;
   border-top: 1px solid #ddd;
@@ -53,7 +54,7 @@
 
 .x .cluster-config .edit .edit-cols > ul.edit-panels {
   flex-basis: 20rem;
-  flex-grow: 4;
+  flex-grow: 10;
   padding-top: 20px;
 }
 
@@ -70,8 +71,16 @@
   display: block;
 }
 
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label input.nodes {
+  width: 4em;
+}
+
 .x .cluster-config .edit .edit-cols > ul.edit-panels > li label input.mdsSpec {
   width: 30em;
+}
+
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label input.sgwNodes {
+  width: 4em;
 }
 
 .x .cluster-config .edit .edit-cols > ul.edit-panels > li label .desc {

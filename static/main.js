@@ -193,7 +193,7 @@ $(document).ready(async () => {
                               placeholder: mspec.placeholder || "",
                             }),
                             m('.desc', mspec.desc ||
-                              (mspec.placeholder && ("Example: " + mspec.placeholder))));
+                              (mspec.placeholder && ("Examples: " + mspec.placeholder))));
                         }));
                       }));
                 })),

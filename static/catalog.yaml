@@ -80,9 +80,8 @@ ez-large.couchbase/v1:
           desc: >-
             Semicolon-separated list of comma-separated list of
             query,index,fts,eventing for each additional node.
-            Example "query,index;index;index" for 3 additional nodes,
+            Example: "query,index;index;index" for 3 additional nodes,
             one running query service, all running the index service.
-          placeholder: 'query,index,fts;index;index'
           mdsSpecMax: 5
           mdsSpecAllow: query,index,fts,eventing
 
@@ -113,9 +112,8 @@ ez-large-mobile.couchbase/v1:
           desc: >-
             Semicolon-separated list of comma-separated list of
             query,index,fts,eventing for each additional node.
-            Example "query,index;index;index" for 3 additional nodes,
+            Example: "query,index;index;index" for 3 additional nodes,
             one running query service, all running the index service.
-          placeholder: 'query,index,fts;index;index'
           mdsSpecMax: 5
           mdsSpecAllow: query,index,fts,eventing
     "ez-sgw.couchbase/v1:":
