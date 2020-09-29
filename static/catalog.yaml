@@ -1,91 +1,99 @@
-ez.couchbase.com/v1:
-  name: EZ Couchbase Cluster
-  desc: For test-drive and development purposes,
-        or for small, simple app deployments.
+ez-learn.couchbase/v1:
+  name: EZ Couchbase Server
+  desc: For test-drives, learning, tutorials and quick dev prototypes.
   descList:
-    - simple
-    - easy
+    - A single node of Couchbase Server with low-footprint settings.
+    - No backups configured.
   cbConfigDict:
-    "ez.couchbase.com/v1:":
+    "ez.couchbase/v1:":
       spec:
-        nodes: 0
+        nodes: 1
         ^nodes:
-          prompt: 1, 2 or 3
+          prompt: 1
+          range: 1..1
+
+ez-micro.couchbase/v1:
+  name: EZ Couchbase Cluster - Micro
+  desc: For test-drive, development and CI purposes.
+  descList:
+    - Max of 2 nodes.
+  cbConfigDict:
+    "ez.couchbase/v1:":
+      spec:
+        nodes: 1
+        ^nodes:
+          prompt: 1, 2
+          range: 1..2
+
+ez-small.couchbase/v1:
+  name: EZ Couchbase Cluster - Small
+  desc: For small, simple app deployments.
+  descList:
+    - Max of 3 nodes.
+  cbConfigDict:
+    "ez.couchbase/v1:":
+      spec:
+        nodes: 3
+        ^nodes:
+          prompt: 1, 2, 3
           range: 1..3
 
-ez-medium.couchbase.com/v2:
-  name: EZ Couchbase Cluster - Medium (v2)
-  desc: For test-drive and development purposes,
-        or for small to medium, simple app deployments, etc.
+ez-medium.couchbase/v1:
+  name: EZ Couchbase Cluster - Medium
+  desc: For medium-sized, simple app deployments.
   descList:
-    - foobar
-    - happy
-    - totally secure'ish
+    - Max of 5 nodes.
   cbConfigDict:
-    "ez.couchbase.com/v1:":
+    "ez.couchbase/v1:":
       spec:
-        nodes: 0
+        nodes: 5
         ^nodes:
-          prompt: 1, 2, 3 or 4
-          range: 1..4
-    "bar.couchbase.com/v2:frazy":
-      spec:
-        bar-nodes: 0
-        ^bar-nodes:
-          range: 1..4
-        title: "test-cluster"
+          prompt: 1-to-5
+          range: 1..5
 
-ez-large.couchbase.com/v2:
-  name: EZ Couchbase Cluster - Large (v2)
-  desc: For test-drive and development purposes,
-        or for small to medium, simple app deployments, etc.
+ez-large.couchbase/v1:
+  name: EZ Couchbase Cluster - Large
+  desc: For large-sized app deployments,
+        with MDS service layout control.
   descList:
-    - foobar
-    - happy
-    - totally secure'ish
-    - much larger than small
-    - larger than medium
+    - Max of 7 full or KV-only nodes.
   cbConfigDict:
-    "ez.couchbase.com/v1:":
+    "ez.couchbase/v1:":
       spec:
-        nodes: 0
+        nodes: 7
         ^nodes:
-          prompt: 1, 2, 3 or 4
-          range: 1..4
-    "bar.couchbase.com/v2:frazy":
+          prompt: 1-to-7
+          range: 1..7
+        kvOnly: false
+    "ez-mds.couchbase/v1:":
       spec:
-        bar-nodes: 0
-        ^bar-nodes:
-          range: 1..5
-    "baz.couchbase.com/v2:fizzy":
-      spec:
-        baz-nodes: 0
-        ^baz-nodes:
-          range: 1..4
-        title: "test-cluster"
+        mdsSpec: ''
+        ^mdsSpec:
+          prompt: 'query,index,fts;query;query'
 
-ez-mobile.couchbase.com/v2:
-  name: EZ Couchbase Cluster - With Mobile (v2)
-  desc: For test-drive and development purposes,
-        or for small to medium, simple app deployments, etc.
+ez-large-mobile.couchbase/v1:
+  name: EZ Couchbase Cluster - Large, with Mobile/Edge Sync-Gateways
+  desc: For large-sized app deployments,
+        with MDS service layout control,
+        and with Couchbase Sync-Gateway.
   descList:
-    - just like before
-    - but with mobile
+    - Max of 7 full or KV-only nodes.
   cbConfigDict:
-    "ez.couchbase.com/v1:":
+    "ez.couchbase/v1:":
       spec:
-        nodes: 0
+        nodes: 7
         ^nodes:
-          prompt: 1, 2, 3, 4 or 5
-          range: 1..5
-    "bar.couchbase.com/v2:frazy":
+          prompt: 1-to-7
+          range: 1..7
+        kvOnly: false
+    "ez-mds.couchbase/v1:":
       spec:
-        bar-nodes: 0
-        ^bar-nodes:
-          range: 1..5
-    "baz.couchbase.com/v2:fizzy":
+        mdsSpec: ''
+        ^mdsSpec:
+          prompt: 'query,index,fts;query;query'
+    "ez-sgw.couchbase/v1:":
       spec:
-        baz-nodes: 0
-        ^baz-nodes:
-          range: 1..4
-        title: "test-cluster"
+        nodes: 1
+        ^nodes:
+          prompt: 1-to-5
+          range: 1..5

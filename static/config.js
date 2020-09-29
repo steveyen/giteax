@@ -15,10 +15,7 @@ function cbCatalogCheck(cbConfig, catalog) {
 
   if (!rv.cbConfig || rv.cbConfig.length <= 0) {
     // First time creation case.
-    rv.cbConfig = [{
-      apiVersion: "ez.couchbase.com/v1",
-      spec: { nodes: 0 },
-    }];
+    rv.cbConfig = cbConfigInit();
   }
 
   var matchedLast = 0; // The matched # from last match.
@@ -42,6 +39,7 @@ function cbCatalogCheck(cbConfig, catalog) {
       unknown += 1;
     });
 
+    // Favors matched when matched >= matchedLast.
     if (matchedLast < matched && unknown <= 0) {
       rv.catalogKey = catalogKey;
 
@@ -50,6 +48,15 @@ function cbCatalogCheck(cbConfig, catalog) {
   }
 
   return rv;
+}
+
+// -----------------------------------------------------------
+
+function cbConfigInit() {
+  return [{
+    apiVersion: "ez.couchbase/v1",
+    spec: { nodes: 1 },
+  }];
 }
 
 // -----------------------------------------------------------

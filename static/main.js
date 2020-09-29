@@ -136,7 +136,7 @@ $(document).ready(async () => {
                   var v = catalog[k];
                   return m("li.index-" + i,
                     m("label",
-                      m(".catalogItemName",
+                      m(".labelInput",
                         m("input[type=radio][name=catalogKey]",
                           {id: 'catalogKey-' + k,
                            value: i,
@@ -148,11 +148,12 @@ $(document).ready(async () => {
                                  edit.cbConfig, catalog, k, edit.cbConfigDict);
                              }
                              return true;
-                           }}),
-                        v.name),
-                      m(".catalogItemDesc", v.desc),
-                      m("ul.catalogItemDesc",
-                        v.descList.map((f) => m("li", f)))));
+                           }})),
+                      m(".labelMain",
+                        m(".catalogItemName", v.name),
+                        m(".catalogItemDesc", v.desc),
+                        m("ul.catalogItemDesc",
+                          v.descList.map((f) => m("li", f))))));
                 })),
                 // Matching list of edit panels, one per catalog item.
                 m("ul.edit-panels", catalogKeys.map((k, i) => {
