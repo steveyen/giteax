@@ -136,6 +136,8 @@ $(document).ready(async () => {
                            onchange: (e) => {
                              if (e.target.checked) {
                                edit.catalogKey = k;
+                               edit.cbConfigDict = cbConfigDictFill(
+                                 edit.cbConfig, catalog, k, edit.cbConfigDict);
                              }
                              return true;
                            }}),

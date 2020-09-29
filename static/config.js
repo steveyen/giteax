@@ -57,14 +57,20 @@ function cbCatalogCheck(cbConfig, catalog) {
 // Returns a 'cbConfigDict' object initially populated
 // by cbConfig, but also filled in with other default
 // values from the catalog metadata.
-function cbConfigDictFill(cbConfig, catalog) {
-  var d = {}; // Keyed by "apiVersion:kind".
+function cbConfigDictFill(cbConfig, catalog, catalogKeyOpt, dOpt) {
+  var d = dOpt || {}; // Keyed by "apiVersion:kind".
 
-  cbConfig.forEach((c) => {
-    d[(c.apiVersion || "") + ":" + (c.kind || "")] = c;
-  });
+  if (!dOpt) {
+    cbConfig.forEach((c) => {
+      d[(c.apiVersion || "") + ":" + (c.kind || "")] = c;
+    });
+  }
 
   Object.keys(catalog).forEach((ck) => {
+    if (catalogKeyOpt && catalogKeyOpt != ck) {
+      return;
+    }
+
     var cv = catalog[ck];
 
     Object.keys(cv.cbConfigDict).forEach((ak) => {
@@ -74,9 +80,10 @@ function cbConfigDictFill(cbConfig, catalog) {
       var spec = cv.cbConfigDict[ak].spec;
 
       Object.keys(spec).forEach((s) => {
-        if (!s.startsWith('^') &&
-            typeof(d[ak].spec[s]) == "undefined") {
-          d[ak].spec[s] ||= spec[s];
+        if (!s.startsWith('^')) {
+          if (typeof(d[ak].spec[s]) == "undefined") {
+            d[ak].spec[s] ||= spec[s];
+          }
 
           specCheck(d[ak].spec, s, spec);
         }
