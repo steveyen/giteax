@@ -9,7 +9,7 @@ ez-learn.couchbase/v1:
       spec:
         nodes: 1
         ^nodes:
-          prompt: 1
+          placeholder: 1
           range: 1..1
 
 ez-micro.couchbase/v1:
@@ -22,7 +22,7 @@ ez-micro.couchbase/v1:
       spec:
         nodes: 1
         ^nodes:
-          prompt: 1, 2
+          placeholder: 1, 2
           range: 1..2
 
 ez-small.couchbase/v1:
@@ -35,7 +35,7 @@ ez-small.couchbase/v1:
       spec:
         nodes: 3
         ^nodes:
-          prompt: 1, 2, 3
+          placeholder: 1, 2, 3
           range: 1..3
 
 ez-medium.couchbase/v1:
@@ -48,7 +48,7 @@ ez-medium.couchbase/v1:
       spec:
         nodes: 5
         ^nodes:
-          prompt: 1-to-5
+          placeholder: 1-to-5
           range: 1..5
 
 ez-large.couchbase/v1:
@@ -62,14 +62,14 @@ ez-large.couchbase/v1:
       spec:
         nodes: 7
         ^nodes:
-          prompt: 1-to-7
+          placeholder: 1-to-7
           range: 1..7
         kvOnly: false
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
         ^mdsSpec:
-          prompt: 'query,index,fts;query;query'
+          placeholder: 'query,index,fts;query;query'
 
 ez-large-mobile.couchbase/v1:
   name: EZ Couchbase Cluster - Large, with Mobile/Edge Sync-Gateways
@@ -83,17 +83,17 @@ ez-large-mobile.couchbase/v1:
       spec:
         nodes: 7
         ^nodes:
-          prompt: 1-to-7
+          placeholder: 1-to-7
           range: 1..7
         kvOnly: false
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
         ^mdsSpec:
-          prompt: 'query,index,fts;query;query'
+          placeholder: 'query,index,fts;query;query'
     "ez-sgw.couchbase/v1:":
       spec:
         nodes: 1
         ^nodes:
-          prompt: 1-to-5
+          placeholder: 1-to-5
           range: 1..5

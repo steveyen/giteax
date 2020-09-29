@@ -181,7 +181,7 @@ $(document).ready(async () => {
                                 },
                                 value: d[ak].spec[s] || "",
                                 placeholder: v.cbConfigDict[ak].spec['^' + s] &&
-                                             v.cbConfigDict[ak].spec['^' + s].prompt
+                                             v.cbConfigDict[ak].spec['^' + s].placeholder
                               }));
                           }));
                         }));
