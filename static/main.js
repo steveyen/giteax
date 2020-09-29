@@ -172,10 +172,13 @@ $(document).ready(async () => {
                           var mspec = v.cbConfigDict[ak].spec[ms] || {};
                           var type = typeof(v.cbConfigDict[ak].spec[s]) == "boolean" ? "checkbox" : "input";
                           var kaks = k + ":" + ak + ":" + s;
+                          var errs = (d[ak].spec[ms] || {}).errs || [];
                           return m('label[for="' + kaks + '"]',
+                            {className: (k + ' ' + ak + ' ' + s + ' ' +
+                                         (errs.length > 0 ? " errs" : ""))
+                                        .replaceAll('.', '_').replaceAll(':', '_').replaceAll('/', '_')},
                             (mspec.label || s) + ": ",
-                            m('span.err',
-                              ((d[ak].spec[ms] || {}).errs || []).join('. ')),
+                            m('span.err', errs.join('. ')),
                             m('input[type=' + type + ']', {
                               id: kaks,
                               className: s,
