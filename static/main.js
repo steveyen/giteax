@@ -81,8 +81,8 @@ $(document).ready(async () => {
   function cbConfigUI(cbConfig, catalog, el) {
     console.log("cbCatalogCheck", cbConfig, catalog);
 
-    var chk = cbCatalogCheck(cbConfig, catalog);
-    if (!chk || !chk.catalogKey) {
+    var curr = cbCatalogCheck(cbConfig, catalog);
+    if (!curr || !curr.catalogKey) {
       m.render(el, [
         m("h3", "Cluster Config (not from catalog)"),
         m("pre", jsyaml.dump(cbConfig)),
@@ -91,7 +91,7 @@ $(document).ready(async () => {
       return;
     }
 
-    chk.cbConfigDict = cbConfigDictFill(chk.cbConfig, catalog);
+    curr.cbConfigDict = cbConfigDictFill(curr.cbConfig, catalog);
 
     var catalogKeys = [];
     for (var k in catalog) {
@@ -101,23 +101,24 @@ $(document).ready(async () => {
     var edit;
 
     function editStart() {
-      edit = JSON.parse(JSON.stringify(chk));
+      edit = JSON.parse(JSON.stringify(curr));
       edit.cbConfigDict = cbConfigDictFill(edit.cbConfig, catalog);
 
-
-      setTimeout(function() {
-        document.getElementById('catalogKey-' + chk.catalogKey)
-          .scrollIntoView();
-      }, 200);
+      if (catalogKeys.indexOf(curr.catalogKey) >=2) {
+        setTimeout(function() {
+          document.getElementById('catalogKey-' + curr.catalogKey)
+            .scrollIntoView();
+        }, 200);
+      }
     }
 
     function editSubmit() {
-      chk = JSON.parse(JSON.stringify(edit));
+      curr = JSON.parse(JSON.stringify(edit));
 
-      chk.cbConfig = cbConfigDictTake(
-         chk.cbConfigDict, catalog, chk.catalogKey);
+      curr.cbConfig = cbConfigDictTake(
+         curr.cbConfigDict, catalog, curr.catalogKey);
 
-      chk.cbConfigDict = cbConfigDictFill(chk.cbConfig, catalog);
+      curr.cbConfigDict = cbConfigDictFill(curr.cbConfig, catalog);
 
       edit = null;
     }
@@ -200,26 +201,26 @@ $(document).ready(async () => {
                   {onclick: () => { edit = null; }}, "Cancel")))
 
           // When in view mode.
-          : m(".view", (function(v) { return [
-              m(".catalogItemName", v.name),
+          : m(".view",
+              m(".catalogItemName", catalog[curr.catalogKey].name),
               m(".pane",
-                m(".catalogItemDesc", v.desc),
+                m(".catalogItemDesc", catalog[curr.catalogKey].desc),
                 m("ul.catalogItemDesc",
-                  v.descList.map((f) => m("li", f))),
+                  catalog[curr.catalogKey].descList.map(
+                    (f) => m("li", f))),
                 m(".fields",
-                  Object.keys(v.cbConfigDict).map((ak) =>
-                    Object.keys(v.cbConfigDict[ak].spec).map((s) => (
+                  Object.keys(catalog[curr.catalogKey].cbConfigDict).map((ak) =>
+                    Object.keys(catalog[curr.catalogKey].cbConfigDict[ak].spec).map((s) => (
                       !s.startsWith('^') &&
                       m("div",
-                        s + ": " + (chk.cbConfigDict &&
-                                    chk.cbConfigDict[ak] &&
-                                    chk.cbConfigDict[ak].spec &&
-                                    chk.cbConfigDict[ak].spec[s]))
+                        s + ": " + (curr.cbConfigDict &&
+                                    curr.cbConfigDict[ak] &&
+                                    curr.cbConfigDict[ak].spec &&
+                                    curr.cbConfigDict[ak].spec[s]))
                     ))))),
               m(".controls",
                 m("button.ui.button",
-                  {onclick: editStart}, "Modify"))
-            ]})(catalog[chk.catalogKey])));
+                  {onclick: editStart}, "Modify"))));
       }
     };
 
