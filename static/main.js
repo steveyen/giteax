@@ -172,7 +172,7 @@ $(document).ready(async () => {
                           var mspec = v.cbConfigDict[ak].spec[ms] || {};
                           var kaks = k + ":" + ak + ":" + s;
                           return m('label[for="' + kaks + '"]',
-                            s + ": ",
+                            (mspec.label || s) + ": ",
                             m('span.err',
                               ((d[ak].spec[ms] || {}).errs || []).join('. ')),
                             m('input[type=input]', {

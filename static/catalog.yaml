@@ -97,5 +97,6 @@ ez-large-mobile.couchbase/v1:
       spec:
         sgwNodes: 1
         ^sgwNodes:
+          label: Additional Sync-Gateway nodes
           placeholder: 1, 2, ... 5
           range: 1..5
