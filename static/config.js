@@ -153,6 +153,29 @@ var specChecks = {
     if (f(spec[key]) > f(parts[1])) {
       return specErr(spec, key, "invalid range: " + meta.range);
     }
+  },
+  "mdsSpecMax": function(spec, key, meta) {
+    if (!spec[key]) {
+      return;
+    }
+
+    var mdsSpecMax = parseInt(meta.mdsSpecMax) || 1;
+
+    var nodes = spec[key].split(';');
+    if (nodes.length > mdsSpecMax) {
+      return specErr(spec, key, "too many additional nodes > " + mdsSpecMax);
+    }
+
+    var mdsSpecAllow = Object.fromEntries(
+      meta.mdsSpecAllow.split(',').map((s) => [s, true]));
+
+    nodes.forEach((node) => {
+      node.split(',').forEach((s) => {
+        if (!mdsSpecAllow[s]) {
+          specErr(spec, key, "unknown service: " + s);
+        }
+      });
+    });
   }
 };
 

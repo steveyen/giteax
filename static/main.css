@@ -63,7 +63,7 @@
 
 .x .cluster-config .edit .edit-cols > ul.edit-panels > li label {
   display: block;
-  padding: 5px 10px 5px 10px;
+  padding: 5px 10px 20px 10px;
 }
 
 .x .cluster-config .edit .edit-cols > ul.edit-panels > li label input {

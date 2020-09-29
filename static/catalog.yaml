@@ -64,13 +64,15 @@ ez-large.couchbase/v1:
         ^nodes:
           placeholder: 1, 2, ... 7
           range: 1..7
-        nodesKVOnly: false
+        nodesDataOnly: false
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
         ^mdsSpec:
+          label: Additional non-data service nodes
           placeholder: 'query,index,fts;query;query'
           mdsSpecMax: 5
+          mdsSpecAllow: query,index,fts
 
 ez-large-mobile.couchbase/v1:
   name: Couchbase Cluster - Large, with Mobile/Edge Sync-Gateways
@@ -79,6 +81,7 @@ ez-large-mobile.couchbase/v1:
   descList:
     - Up to 7 full-service or data-only nodes.
     - Up to 5 additional non-data service nodes.
+    - Up to 5 additional Sync-Gateway nodes.
   cbConfigDict:
     "ez.couchbase/v1:":
       spec:
@@ -86,13 +89,15 @@ ez-large-mobile.couchbase/v1:
         ^nodes:
           placeholder: 1, 2, ... 7
           range: 1..7
-        nodesKVOnly: false
+        nodesDataOnly: false
     "ez-mds.couchbase/v1:":
       spec:
         mdsSpec: ''
         ^mdsSpec:
+          label: Additional non-data service nodes
           placeholder: 'query,index,fts;query;query'
           mdsSpecMax: 5
+          mdsSpecAllow: query,index,fts
     "ez-sgw.couchbase/v1:":
       spec:
         sgwNodes: 1
