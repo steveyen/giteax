@@ -127,7 +127,7 @@ var specChecks = {
     var haveInt = checkInt(spec[key]);
     var wantInt = checkInt(parts[0]) || checkint(parts[1]);
     if (wantInt != haveInt) {
-      return specErr(spec, key, "invalid range type: " + meta.range);
+      return specErr(spec, key, "invalid type");
     }
 
     var f = wantInt ? parseInt : (x) => x;
