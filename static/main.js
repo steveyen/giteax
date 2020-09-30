@@ -61,7 +61,7 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   function onCbConfigFetched(baseURI, cbConfigYaml) {
-    var cbConfig = jsyaml.safeLoadAll(cbConfigYaml);
+    var cbConfig = jsyaml.safeLoad(cbConfigYaml);
 
     fetch('/x/static/catalog.yaml')
     .then(response => response.text())
@@ -77,35 +77,35 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  // Populate the UI for cbConfig viewing & editing into the el.
+  // Populate the el with UI for cbConfig viewing & editing.
   function cbConfigUI(cbConfig, catalog, el) {
-    console.log("cbCatalogCheck", cbConfig, catalog);
+    console.log("cbConfigUI, cbConfig", cbConfig);
+    console.log("cbConfigUI, catalog", catalog);
 
-    var curr = cbCatalogCheck(cbConfig, catalog);
-    if (!curr || !curr.itemKey) {
-      m.render(el, [
+    var curr = cbConfigInit(cbConfig);
+
+    curr = cbCatalogCheck(cbConfig, catalog);
+    if (!curr || !curr.item) {
+      m.render(el,
         m("h3", "Cluster Config (not from catalog)"),
-        m("pre", jsyaml.dump(cbConfig)),
-      ]);
+        m("pre", jsyaml.dump(curr)));
 
       return;
     }
 
-    curr.cbConfigDict = cbConfigDictFill(curr.cbConfig, catalog);
+    curr.optionsDict = cbConfigOptionsDictFill(curr, catalog);
 
-    var itemKeys = [];
-    for (var k in catalog.items) {
-      itemKeys.push(k);
-    }
+    var itemKeys = Object.keys(catalog.items);
 
     var edit;
 
     function editStart() {
       edit = JSON.parse(JSON.stringify(curr));
-      edit.cbConfigDict = cbConfigDictFill(edit.cbConfig, catalog);
+
+      edit.optionsDict = cbConfigOptionsDictFill(edit, catalog);
 
       setTimeout(function() {
-        document.getElementById('itemKey-' + curr.itemKey)
+        document.getElementById('itemKey-' + curr.item)
           .parentElement.parentElement.parentElement
           .scrollIntoView();
       }, 200);
@@ -114,10 +114,10 @@ $(document).ready(async () => {
     function editSubmit() {
       curr = JSON.parse(JSON.stringify(edit));
 
-      curr.cbConfig = cbConfigDictTake(
-         curr.cbConfigDict, catalog, curr.itemKey);
+      curr.options = cbConfigOptionsDictTake(
+         curr.optionsDict, catalog, curr.item);
 
-      curr.cbConfigDict = cbConfigDictFill(curr.cbConfig, catalog);
+      curr.optionsDict = cbConfigOptionsDictFill(curr, catalog);
 
       edit = null;
     }
@@ -129,22 +129,24 @@ $(document).ready(async () => {
           edit
           ? m(".edit", // When in edit mode.
               m("div",
-                {className: "edit-cols index-" + itemKeys.indexOf(edit.itemKey)},
+                {className: "edit-cols index-" + itemKeys.indexOf(edit.item)},
+
                 // List of catalog items as radio buttons.
                 m("ul.catalogItems", itemKeys.map((k, i) => {
                   var v = catalog.items[k];
+
                   return m("li.index-" + i,
                     m("label",
                       m(".labelInput",
                         m("input[type=radio][name=itemKey]",
                           {id: 'itemKey-' + k,
                            value: i,
-                           checked: k == edit.itemKey,
+                           checked: k == edit.item,
                            onchange: (e) => {
                              if (e.target.checked) {
-                               edit.itemKey = k;
-                               edit.cbConfigDict = cbConfigDictFill(
-                                 edit.cbConfig, catalog, k, edit.cbConfigDict);
+                               edit.item = k;
+                               edit.optionsDict = cbConfigOptionsDictFill(
+                                 edit, catalog, edit.optionsDict);
                              }
                              return true;
                            }})),
@@ -155,47 +157,57 @@ $(document).ready(async () => {
                         m("ul.catalogItemDesc",
                           v.descList.map((f) => m("li", f))))));
                 })),
+
                 // Matching list of edit panels, one per catalog item,
                 // which will be hidden/shown based on the currently
                 // selected catalog item.
                 m("ul.edit-panels", itemKeys.map((k, i) => {
                   var v = catalog.items[k];
-                  var d = edit.cbConfigDict;
+                  var d = edit.optionsDict;
+
                   return m("li.index-" + i,
                     m(".catalogItemName",
                       m.trust(v.name.replace(", with ", ",<br>with "))),
+
                     m(".descShort", v.descShort),
-                    Object.keys(v.cbConfigDict).map((ak) => {
+
+                    v.options.map((g) => {
+                      d[g.group] ||= {};
+
+                      var dg = d[g.group];
+
                       return m(".fields",
-                        Object.keys(v.cbConfigDict[ak].spec).map((s) => {
-                          if (s.startsWith('^')) {
+                        Object.keys(g).map((s) => {
+                          if (s.startsWith('^') || s == "group") {
                             return;
                           }
+
                           var ms = '^' + s;
-                          var mspec = v.cbConfigDict[ak].spec[ms] || {};
-                          var type = typeof(v.cbConfigDict[ak].spec[s]) == "boolean" ? "checkbox" : "input";
-                          var kaks = k + ":" + ak + ":" + s;
-                          var errs = (d[ak].spec[ms] || {}).errs || [];
-                          return m('label[for="' + kaks + '"]',
-                            {className: (k + ' ' + ak + ' ' + s + ' ' +
+                          var mspec = g[ms] || {};
+                          var kgs = k + ":" + g.group + ":" + s;
+                          var errs = (dg[ms] || {}).errs || [];
+                          var type = typeof(g[s]) == "boolean" ? "checkbox" : "input";
+
+                          return m('label[for="' + kgs + '"]',
+                            {className: (k + ' ' + g.group + ' ' + s + ' ' +
                                          (errs.length > 0 ? " errs" : ""))
                                         .replaceAll('.', '_').replaceAll(':', '_').replaceAll('/', '_')},
                             (mspec.label || s) + ": ",
                             m('span.err', errs.join('. ')),
                             m('input[type=' + type + ']', {
-                              id: kaks,
+                              id: kgs,
                               className: s,
                               oninput: (e) => {
                                 if (e.target.type == "checkbox") {
-                                  d[ak].spec[s] = e.target.checked;
+                                  dg[s] = e.target.checked;
                                 } else {
-                                  d[ak].spec[s] = e.target.value;
+                                  dg[s] = e.target.value;
                                 }
 
-                                specCheck(d[ak].spec, s, v.cbConfigDict[ak].spec);
+                                specCheck(dg, s, g);
                               },
-                              checked: d[ak].spec[s],
-                              value: d[ak].spec[s] || "",
+                              checked: dg[s],
+                              value: dg[s] || "",
                             }),
                             m('.desc', mspec.desc));
                         }));
@@ -218,22 +230,25 @@ $(document).ready(async () => {
 
           // When in view mode.
           : m(".view",
-              m(".catalogItemName", catalog.items[curr.itemKey].name),
+              m(".catalogItemName", catalog.items[curr.item].name),
               m(".pane",
-                m(".catalogItemDesc", catalog.items[curr.itemKey].desc),
+                m(".catalogItemDesc", catalog.items[curr.item].desc),
                 m("ul.catalogItemDesc",
-                  catalog.items[curr.itemKey].descList.map(
+                  catalog.items[curr.item].descList.map(
                     (f) => m("li", f))),
                 m(".fields",
-                  Object.keys(catalog.items[curr.itemKey].cbConfigDict).map((ak) =>
-                    Object.keys(catalog.items[curr.itemKey].cbConfigDict[ak].spec).map((s) => (
-                      !s.startsWith('^') &&
-                      m("div",
-                        s + ": " + (curr.cbConfigDict &&
-                                    curr.cbConfigDict[ak] &&
-                                    curr.cbConfigDict[ak].spec &&
-                                    curr.cbConfigDict[ak].spec[s]))
-                    )))),
+                  catalog.items[curr.item].options.map((g) =>
+                    Object.keys(g).map((s) => {
+                      if (s.startsWith('^') || s == "group") {
+                        return;
+                      }
+                      var mspec = g['^' + s] || {};
+                      return m("div",
+                        (mspec.label || s) + ": " +
+                        (curr.optionsDict &&
+                         curr.optionsDict[g.group] &&
+                         curr.optionsDict[g.group][s]));
+                    }))),
                 m("pre.raw", JSON.stringify(curr, null, 1))),
               m(".controls",
                 m("button.ui.button",

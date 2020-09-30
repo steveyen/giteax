@@ -10,58 +10,54 @@ items:
     descShort: >-
       This configuration is a single node of Couchbase Server
       for test-drives and learning -- with nothing extra to configure.
-    cbConfigDict:
-      "ez.couchbase/v1:":
-        spec:
-          nodes: 1
-          ^nodes:
-            label: '# of nodes in the cluster'
-            range: 1..1
+    options:
+      - group: ez.couchbase/v1
+        nodes: 1
+        ^nodes:
+          label: '# of nodes in the cluster'
+          range: 1..1
   
   ez-micro.couchbase/v1:
     name: Couchbase Cluster - Micro
     desc: For test-drive, development and CI purposes.
     descList:
       - Up to 2 full-service nodes.
-    cbConfigDict:
-      "ez.couchbase/v1:":
-        spec:
-          nodes: 1
-          ^nodes:
-            label: '# of nodes in the cluster'
-            desc: >-
-              Examples: 1, 2
-            range: 1..2
+    options:
+      - group: ez.couchbase/v1
+        nodes: 1
+        ^nodes:
+          label: '# of nodes in the cluster'
+          desc: >-
+            Examples: 1, 2
+          range: 1..2
   
   ez-small.couchbase/v1:
     name: Couchbase Cluster - Small
     desc: For small, simple app deployments.
     descList:
       - Up to 3 full-service nodes.
-    cbConfigDict:
-      "ez.couchbase/v1:":
-        spec:
-          nodes: 3
-          ^nodes:
-            label: '# of nodes in the cluster'
-            desc: >-
-              Examples: 1, 2, 3
-            range: 1..3
+    options:
+      - group: ez.couchbase/v1
+        nodes: 3
+        ^nodes:
+          label: '# of nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, 3
+          range: 1..3
   
   ez-medium.couchbase/v1:
     name: Couchbase Cluster - Medium
     desc: For medium-sized, simple app deployments.
     descList:
       - Up to 5 full-service nodes.
-    cbConfigDict:
-      "ez.couchbase/v1:":
-        spec:
-          nodes: 5
-          ^nodes:
-            label: '# of nodes in the cluster'
-            desc: >-
-              Examples: 1, 2, ... 5
-            range: 1..5
+    options:
+      - group: ez.couchbase/v1
+        nodes: 5
+        ^nodes:
+          label: '# of nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, ... 5
+          range: 1..5
   
   ez-large.couchbase/v1:
     name: Couchbase Cluster - Large
@@ -69,30 +65,28 @@ items:
     descList:
       - Up to 7 full-service or data-only nodes.
       - Up to 5 additional non-data service nodes.
-    cbConfigDict:
-      "ez.couchbase/v1:":
-        spec:
-          nodes: 7
-          ^nodes:
-            label: '# of full-service or data-only nodes in the cluster'
-            desc: >-
-              Examples: 1, 2, ... 7
-            range: 1..7
-          nodesDataOnly: false
-          ^nodesDataOnly:
-            label: The above nodes are data-only nodes
-      "ez-mds.couchbase/v1:":
-        spec:
-          mdsSpec: ''
-          ^mdsSpec:
-            label: Additional non-data service nodes
-            desc: >-
-              Semicolon-separated list of comma-separated list of
-              query,index,fts,eventing for each additional node.
-              Example: "query,index;index;index" for 3 additional nodes,
-              one running query service, all running the index service.
-            mdsSpecMax: 5
-            mdsSpecAllow: query,index,fts,eventing
+    options:
+      - group: ez.couchbase/v1
+        nodes: 7
+        ^nodes:
+          label: '# of full-service or data-only nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, ... 7
+          range: 1..7
+        nodesDataOnly: false
+        ^nodesDataOnly:
+          label: The above nodes are data-only nodes
+      - group: ez-mds.couchbase/v1
+        mdsSpec: ''
+        ^mdsSpec:
+          label: Additional non-data service nodes
+          desc: >-
+            Semicolon-separated list of comma-separated list of
+            query,index,fts,eventing for each additional node.
+            Example: "query,index;index;index" for 3 additional nodes,
+            one running query service, all running the index service.
+          mdsSpecMax: 5
+          mdsSpecAllow: query,index,fts,eventing
   
   ez-large-mobile.couchbase/v1:
     name: Couchbase Cluster - Large, with Mobile/Edge Sync-Gateways
@@ -102,35 +96,32 @@ items:
       - Up to 7 full-service or data-only nodes.
       - Up to 5 additional non-data service nodes.
       - Up to 5 additional Sync-Gateway nodes.
-    cbConfigDict:
-      "ez.couchbase/v1:":
-        spec:
-          nodes: 7
-          ^nodes:
-            label: '# of full-service or data-only nodes in the cluster'
-            desc: >-
-              Examples: 1, 2, ... 7
-            range: 1..7
-          nodesDataOnly: false
-          ^nodesDataOnly:
-            label: The above nodes are data-only nodes
-      "ez-mds.couchbase/v1:":
-        spec:
-          mdsSpec: ''
-          ^mdsSpec:
-            label: Additional non-data service nodes
-            desc: >-
-              Semicolon-separated list of comma-separated list of
-              query,index,fts,eventing for each additional node.
-              Example: "query,index;index;index" for 3 additional nodes,
-              one running query service, all running the index service.
-            mdsSpecMax: 5
-            mdsSpecAllow: query,index,fts,eventing
-      "ez-sgw.couchbase/v1:":
-        spec:
-          sgwNodes: 1
-          ^sgwNodes:
-            label: Additional Sync-Gateway nodes
-            desc: >-
-              Examples: 1, 2, ... 5
-            range: 1..5
+    options:
+      - group: ez.couchbase/v1
+        nodes: 7
+        ^nodes:
+          label: '# of full-service or data-only nodes in the cluster'
+          desc: >-
+            Examples: 1, 2, ... 7
+          range: 1..7
+        nodesDataOnly: false
+        ^nodesDataOnly:
+          label: The above nodes are data-only nodes
+      - group: ez-mds.couchbase/v1
+        mdsSpec: ''
+        ^mdsSpec:
+          label: Additional non-data service nodes
+          desc: >-
+            Semicolon-separated list of comma-separated list of
+            query,index,fts,eventing for each additional node.
+            Example: "query,index;index;index" for 3 additional nodes,
+            one running query service, all running the index service.
+          mdsSpecMax: 5
+          mdsSpecAllow: query,index,fts,eventing
+      - group: ez-sgw.couchbase/v1
+        sgwNodes: 1
+        ^sgwNodes:
+          label: Additional Sync-Gateway nodes
+          desc: >-
+            Examples: 1, 2, ... 5
+          range: 1..5
