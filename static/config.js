@@ -5,7 +5,7 @@
 function cbCatalogCheck(cbConfig, catalog) {
   var rv = {
     // Represents the best matching catalog item for the cbConfig.
-    catalogKey: null,
+    itemKey: null,
 
     // The cleaned up, processed version of the cbConfig,
     // perhaps with default value initializeds and/or
@@ -20,8 +20,8 @@ function cbCatalogCheck(cbConfig, catalog) {
 
   var matchedLast = 0; // The matched # from last match.
 
-  for (var catalogKey in catalog) {
-    var catalogItem = catalog[catalogKey];
+  for (var itemKey in catalog.items) {
+    var catalogItem = catalog.items[itemKey];
 
     var matched = 0;
     var unknown = 0;
@@ -41,7 +41,7 @@ function cbCatalogCheck(cbConfig, catalog) {
 
     // Favors matched when matched >= matchedLast.
     if (matchedLast < matched && unknown <= 0) {
-      rv.catalogKey = catalogKey;
+      rv.itemKey = itemKey;
 
       matchedLast = matched;
     }
@@ -64,7 +64,7 @@ function cbConfigInit() {
 // Returns a 'cbConfigDict' object initially populated
 // by cbConfig, but also filled in with other default
 // values from the catalog metadata.
-function cbConfigDictFill(cbConfig, catalog, catalogKeyOpt, dOpt) {
+function cbConfigDictFill(cbConfig, catalog, itemKeyOpt, dOpt) {
   var d = dOpt || {}; // Keyed by "apiVersion:kind".
 
   if (!dOpt) {
@@ -73,12 +73,12 @@ function cbConfigDictFill(cbConfig, catalog, catalogKeyOpt, dOpt) {
     });
   }
 
-  Object.keys(catalog).forEach((ck) => {
-    if (catalogKeyOpt && catalogKeyOpt != ck) {
+  Object.keys(catalog.items).forEach((ck) => {
+    if (itemKeyOpt && itemKeyOpt != ck) {
       return;
     }
 
-    var cv = catalog[ck];
+    var cv = catalog.items[ck];
 
     Object.keys(cv.cbConfigDict).forEach((ak) => {
       d[ak] ||= {};
@@ -104,11 +104,11 @@ function cbConfigDictFill(cbConfig, catalog, catalogKeyOpt, dOpt) {
 // -----------------------------------------------------------
 
 // Retrieves a cbConfig from a cbConfigDict, driven
-// from the metadata from a catalog and a catalogKey.
-function cbConfigDictTake(cbConfigDict, catalog, catalogKey) {
+// from the metadata from a catalog and a itemKey.
+function cbConfigDictTake(cbConfigDict, catalog, itemKey) {
   var d = {};
 
-  Object.keys(catalog[catalogKey].cbConfigDict).forEach((ak) => {
+  Object.keys(catalog.items[itemKey].cbConfigDict).forEach((ak) => {
     d[ak] = Object.assign(d[ak] || {}, cbConfigDict[ak] || {});
   });
 

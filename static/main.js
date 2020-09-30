@@ -82,7 +82,7 @@ $(document).ready(async () => {
     console.log("cbCatalogCheck", cbConfig, catalog);
 
     var curr = cbCatalogCheck(cbConfig, catalog);
-    if (!curr || !curr.catalogKey) {
+    if (!curr || !curr.itemKey) {
       m.render(el, [
         m("h3", "Cluster Config (not from catalog)"),
         m("pre", jsyaml.dump(cbConfig)),
@@ -93,9 +93,9 @@ $(document).ready(async () => {
 
     curr.cbConfigDict = cbConfigDictFill(curr.cbConfig, catalog);
 
-    var catalogKeys = [];
-    for (var k in catalog) {
-      catalogKeys.push(k);
+    var itemKeys = [];
+    for (var k in catalog.items) {
+      itemKeys.push(k);
     }
 
     var edit;
@@ -105,7 +105,7 @@ $(document).ready(async () => {
       edit.cbConfigDict = cbConfigDictFill(edit.cbConfig, catalog);
 
       setTimeout(function() {
-        document.getElementById('catalogKey-' + curr.catalogKey)
+        document.getElementById('itemKey-' + curr.itemKey)
           .parentElement.parentElement.parentElement
           .scrollIntoView();
       }, 200);
@@ -115,7 +115,7 @@ $(document).ready(async () => {
       curr = JSON.parse(JSON.stringify(edit));
 
       curr.cbConfig = cbConfigDictTake(
-         curr.cbConfigDict, catalog, curr.catalogKey);
+         curr.cbConfigDict, catalog, curr.itemKey);
 
       curr.cbConfigDict = cbConfigDictFill(curr.cbConfig, catalog);
 
@@ -129,20 +129,20 @@ $(document).ready(async () => {
           edit
           ? m(".edit", // When in edit mode.
               m("div",
-                {className: "edit-cols index-" + catalogKeys.indexOf(edit.catalogKey)},
+                {className: "edit-cols index-" + itemKeys.indexOf(edit.itemKey)},
                 // List of catalog items as radio buttons.
-                m("ul.catalogItems", catalogKeys.map((k, i) => {
-                  var v = catalog[k];
+                m("ul.catalogItems", itemKeys.map((k, i) => {
+                  var v = catalog.items[k];
                   return m("li.index-" + i,
                     m("label",
                       m(".labelInput",
-                        m("input[type=radio][name=catalogKey]",
-                          {id: 'catalogKey-' + k,
+                        m("input[type=radio][name=itemKey]",
+                          {id: 'itemKey-' + k,
                            value: i,
-                           checked: k == edit.catalogKey,
+                           checked: k == edit.itemKey,
                            onchange: (e) => {
                              if (e.target.checked) {
-                               edit.catalogKey = k;
+                               edit.itemKey = k;
                                edit.cbConfigDict = cbConfigDictFill(
                                  edit.cbConfig, catalog, k, edit.cbConfigDict);
                              }
@@ -158,8 +158,8 @@ $(document).ready(async () => {
                 // Matching list of edit panels, one per catalog item,
                 // which will be hidden/shown based on the currently
                 // selected catalog item.
-                m("ul.edit-panels", catalogKeys.map((k, i) => {
-                  var v = catalog[k];
+                m("ul.edit-panels", itemKeys.map((k, i) => {
+                  var v = catalog.items[k];
                   var d = edit.cbConfigDict;
                   return m("li.index-" + i,
                     m(".catalogItemName",
@@ -202,7 +202,7 @@ $(document).ready(async () => {
                       }));
                 })),
                 m("style",
-                  catalogKeys.map((k, i) => {
+                  itemKeys.map((k, i) => {
                     return ".x .cluster-config .edit .edit-cols.index-" + i +
                            " > ul.catalogItems li.index-" + i +
                            " { background-color: #f4f4f4; }" +
@@ -218,15 +218,15 @@ $(document).ready(async () => {
 
           // When in view mode.
           : m(".view",
-              m(".catalogItemName", catalog[curr.catalogKey].name),
+              m(".catalogItemName", catalog.items[curr.itemKey].name),
               m(".pane",
-                m(".catalogItemDesc", catalog[curr.catalogKey].desc),
+                m(".catalogItemDesc", catalog.items[curr.itemKey].desc),
                 m("ul.catalogItemDesc",
-                  catalog[curr.catalogKey].descList.map(
+                  catalog.items[curr.itemKey].descList.map(
                     (f) => m("li", f))),
                 m(".fields",
-                  Object.keys(catalog[curr.catalogKey].cbConfigDict).map((ak) =>
-                    Object.keys(catalog[curr.catalogKey].cbConfigDict[ak].spec).map((s) => (
+                  Object.keys(catalog.items[curr.itemKey].cbConfigDict).map((ak) =>
+                    Object.keys(catalog.items[curr.itemKey].cbConfigDict[ak].spec).map((s) => (
                       !s.startsWith('^') &&
                       m("div",
                         s + ": " + (curr.cbConfigDict &&
