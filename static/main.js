@@ -149,7 +149,8 @@ $(document).ready(async () => {
                              return true;
                            }})),
                       m(".labelMain",
-                        m(".catalogItemName", v.name),
+                        m(".catalogItemName",
+                          m.trust(v.name.replace(", with ", ",<br>with "))),
                         m(".catalogItemDesc", v.desc),
                         m("ul.catalogItemDesc",
                           v.descList.map((f) => m("li", f))))));
