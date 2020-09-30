@@ -236,20 +236,17 @@ $(document).ready(async () => {
                 m("ul.catalogItemDesc",
                   catalog.items[curr.item].descList.map(
                     (f) => m("li", f))),
-                m(".fields",
+                m("table.fields",
                   catalog.items[curr.item].options.map((g) =>
-                    Object.keys(g).map((s) => {
-                      if (s.startsWith('^') || s == "group") {
-                        return;
-                      }
-                      var mspec = g['^' + s] || {};
-                      return m("div",
-                        (mspec.label || s) + ": " +
-                        (curr.optionsDict &&
-                         curr.optionsDict[g.group] &&
-                         curr.optionsDict[g.group][s]));
-                    }))),
-                m("pre.raw", JSON.stringify(curr, null, 1))),
+                    Object.keys(g).map((s) => (
+                      !s.startsWith('^') && s != "group") &&
+                      m("tr",
+                        m("td.field", s + ":"),
+                        m("td.label", (g['^' + s] || {}).label),
+                        m("td.value",
+                          curr.optionsDict &&
+                          curr.optionsDict[g.group] &&
+                          curr.optionsDict[g.group][s])))))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify"))));
