@@ -233,7 +233,8 @@ $(document).ready(async () => {
                                     curr.cbConfigDict[ak] &&
                                     curr.cbConfigDict[ak].spec &&
                                     curr.cbConfigDict[ak].spec[s]))
-                    ))))),
+                    )))),
+                m("pre.raw", JSON.stringify(curr, null, 1))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify"))));

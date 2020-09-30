@@ -117,8 +117,13 @@ function cbConfigDictTake(cbConfigDict, catalog, itemKey) {
 
     var akp = ak.split(':');
 
-    o.apiVersion ||= akp[0];
-    o.kind ||= akp[1];
+    if (akp[0]) {
+      o.apiVersion ||= akp[0];
+    }
+
+    if (akp[1]) {
+      o.kind ||= akp[1];
+    }
 
     if (o.spec) {
       Object.keys(o.spec).forEach((k) => {
