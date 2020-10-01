@@ -13,8 +13,15 @@
 
 function cbConfigInit(cbConfig) {
   cbConfig = JSON.parse(JSON.stringify(cbConfig));
+
+  if (typeof(cbConfig) != "object") {
+    return null;
+  }
+
   cbConfig ||= {};
+
   cbConfig.item ||= "ez-learn.couchbase/v1";
+
   cbConfig.options ||= [];
   if (cbConfig.options.length <= 0) {
     cbConfig.options.push({});
@@ -24,6 +31,7 @@ function cbConfigInit(cbConfig) {
     g.group ||= "ez.couchbase/v1";
     g.nodes ||= 1;
   }
+
   return cbConfig;
 }
 
