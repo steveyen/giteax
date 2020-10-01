@@ -9,9 +9,10 @@ $(document).ready(async () => {
   if (document.getElementById("repo-files-table")) {
     var rt = document.getElementById("repo-topics");
     if (rt) {
+      // Example baseURI == "http://localhost:8090/steve/cluster-2".
       var a = document.querySelector(
         '.repository.file.list .repo-header .repo-title.breadcrumb a');
-      if (a) {
+      if (a && a.baseURI.split('/').length <= 5) {
         var lb = document.createElement("label");
         lb.className = "x";
         lb.htmlFor = "x-repo-advanced-toggle";
