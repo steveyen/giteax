@@ -262,7 +262,7 @@ $(document).ready(async () => {
                   }).join(" "))),
               m(".controls",
                 m("button.ui.button.green",
-                  {onclick: editSubmit}, "Submit"),
+                  {onclick: editSubmit}, "Next (check YAML)"),
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
 
