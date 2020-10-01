@@ -156,7 +156,8 @@ $(document).ready(async () => {
                           m.trust(v.name.replace(", with ", ",<br>with "))),
                         m(".catalogItemDesc", v.desc),
                         m("ul.catalogItemDesc",
-                          v.descList.map((f) => m("li", f))))));
+                          v.descList.map((f) => m("li", f))),
+                        m(".catalogItemKey", k))));
                 })),
 
                 // Matching list of edit panels, one per catalog item,
@@ -232,6 +233,7 @@ $(document).ready(async () => {
           // When in view mode.
           : m(".view",
               m(".catalogItemName", catalog.items[curr.item].name),
+              m(".catalogItemKey", curr.item),
               m(".pane",
                 m(".catalogItemDesc", catalog.items[curr.item].desc),
                 m("ul.catalogItemDesc",
