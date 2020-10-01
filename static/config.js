@@ -23,11 +23,14 @@ function cbConfigInit(cbConfig) {
   cbConfig.item ||= "ez-learn.couchbase/v1";
 
   cbConfig.options ||= [];
+
   if (cbConfig.options.length <= 0) {
     cbConfig.options.push({});
   }
+
   if (cbConfig.options.length > 0) {
     var g = cbConfig.options[0];
+
     g.group ||= "ez.couchbase/v1";
     g.nodes ||= 1;
   }
@@ -124,7 +127,8 @@ var specChecks = {
       return specErr(spec, key, "invalid range: " + meta.range);
     }
   },
-  "mdsSpecMax": function(spec, key, meta) {
+
+  mdsSpecMax: function(spec, key, meta) {
     if (!spec[key]) {
       return;
     }
@@ -147,7 +151,7 @@ var specChecks = {
       });
     });
   }
-};
+}
 
 function specCheck(spec, key, specMeta) {
   var mkey = '^' + key;

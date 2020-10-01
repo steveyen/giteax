@@ -81,6 +81,8 @@ func HttpHandleKick(w http.ResponseWriter, r *http.Request) {
 		*staticDir+"/kick.html.tmpl")).Execute(w, data)
 }
 
+// ------------------------------------------------
+
 /* Example kick HTTP POST message, after JSON parse...
    m: map[after:72b34dbf9e52188f92641cd50978ee95f4f6df2d
       before:9b6162bfca70315f47157ca9fc1b5ee0dcac6850
