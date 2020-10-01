@@ -47,6 +47,31 @@ $(document).ready(async () => {
     }
   }
 
+  // Else if we're on the file edit page in /x/initFile mode...
+  var pathname = window.location.pathname;
+  if (pathname.startsWith("/x/initFile/")) {
+    var form = document.querySelector(".ui.container .ui.edit.form");
+    if (form) {
+      form.action = pathname.slice("/x/initFile".length);
+
+      var t = document.getElementById("xInitFile");
+      if (t) {
+        function updateEditor() {
+          if (window.codeEditors &&
+              window.codeEditors.length > 0 &&
+              window.codeEditors[0].setValue) {
+            window.codeEditors[0].setValue(t.innerHTML);
+            return;
+          }
+
+          setTimeout(updateEditor, 100);
+        }
+
+        setTimeout(updateEditor, 300);
+      }
+    }
+  }
+
   // Fall-thru on errors to disabling the UI 'x' extensions.
 
   document.body.className = document.body.className + " x-none";
