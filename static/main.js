@@ -138,14 +138,25 @@ $(document).ready(async () => {
     }
 
     function editSubmit() {
-      curr = JSON.parse(JSON.stringify(edit));
+      var next = JSON.parse(JSON.stringify(edit));
 
-      curr.options = cbConfigOptionsDictTake(
-         curr.optionsDict, catalog, curr.item);
+      next.options = cbConfigOptionsDictTake(
+         next.optionsDict, catalog, next.item);
 
-      curr.optionsDict = cbConfigOptionsDictFill(curr, catalog);
+      delete next.optionsDict;
 
-      edit = null;
+      var f = document.createElement("form");
+
+      f.style = "display: none;";
+      f.method = "get";
+      f.action = "/x/initFile" + window.location.pathname + "/_edit/master/cb-config.yaml";
+      f.innerHTML =
+        document.querySelector('input[name=_csrf]').outerHTML +
+        '<textarea name="xInitFile">' + jsyaml.safeDump(next) + '</textarea>';
+
+      document.body.appendChild(f);
+
+      f.submit();
     }
 
     var ClusterConfig = {
