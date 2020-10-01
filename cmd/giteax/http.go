@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -23,8 +26,8 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 
 	mux.HandleFunc("/x/kick", HttpHandleKick)
 
-	mux.HandleFunc("/x/startFile/", func(w http.ResponseWriter, r *http.Request) {
-		// From "/x/startFile/$userOrg/$repo/_edit/master/cb-config.yaml"
+	mux.HandleFunc("/x/initFile/", func(w http.ResponseWriter, r *http.Request) {
+		// From "/x/initFile/$userOrg/$repo/_edit/master/cb-config.yaml"
 		//   to "/$userOrg/$repo/_edit/master/cb-config.yaml".
 		pathParts := strings.Split(r.URL.Path, "/")
 		pathClean := "/" + strings.Join(pathParts[3:], "/")
@@ -38,6 +41,15 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 
 		proxy := &httputil.ReverseProxy{
 			Director: director,
+		}
+
+		r.ParseForm()
+
+		c := r.Form.Get("xInitFile")
+		if c != "" {
+			proxy.ModifyResponse = func(resp *http.Response) error {
+				return ResponseInject(resp, "xInitFile", c)
+			}
 		}
 
 		proxy.ServeHTTP(w, r)
@@ -150,3 +162,44 @@ func HttpHandleKick(w http.ResponseWriter, r *http.Request) {
       last_login:2020-09-25T17:44:41-07:00 login:steve
       username:steve]]
 */
+
+// ------------------------------------------------
+
+func ResponseInject(resp *http.Response, id, content string) error {
+	bodyEx := `<template id="` + id + `">` + content + `</template></body>`
+
+	var buf bytes.Buffer
+	if _, err := buf.ReadFrom(resp.Body); err != nil {
+		return err
+	}
+
+	b := buf.Bytes()
+
+	b = bytes.Replace(b, []byte("</body>"), []byte(bodyEx), 1)
+
+	resp.Body = &ReaderCloser{
+		reader: bytes.NewReader(b),
+		closer: resp.Body,
+	}
+
+	resp.ContentLength = int64(len(b))
+
+	resp.Header["Content-Length"] = []string{fmt.Sprintf("%d", len(b))}
+
+	return nil
+}
+
+// ------------------------------------------------
+
+type ReaderCloser struct {
+	reader io.Reader
+	closer io.Closer
+}
+
+func (s *ReaderCloser) Close() error {
+	return s.closer.Close()
+}
+
+func (s *ReaderCloser) Read(p []byte) (n int, err error) {
+	return s.reader.Read(p)
+}
