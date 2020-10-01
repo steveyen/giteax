@@ -1,7 +1,7 @@
 items:
   ez-learn.couchbase/v1:
-    name: Couchbase Server - Test Drive
-    desc: For test-drives, learning, tutorials and quick dev prototypes.
+    name: Couchbase Server - Learn
+    desc: For learning, tutorials, test-drives and quick dev prototypes.
     descList:
       - A single node of Couchbase Server with low-footprint settings.
       - No backups configured.
