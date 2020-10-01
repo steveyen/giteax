@@ -8,6 +8,10 @@
   margin-bottom: 40px;
 }
 
+.x .cluster-config .view .pane ul.catalogItemDesc {
+  margin-bottom: 30px;
+}
+
 .x .cluster-config .view .pane table.fields td {
   padding: 5px 10px 5px 10px;
   border: 1px solid #888;

@@ -1,8 +1,6 @@
-meta:
-
 items:
   ez-learn.couchbase/v1:
-    name: Couchbase Server Test - Drive
+    name: Couchbase Server - Test Drive
     desc: For test-drives, learning, tutorials and quick dev prototypes.
     descList:
       - A single node of Couchbase Server with low-footprint settings.
