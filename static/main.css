@@ -116,11 +116,11 @@
   width: 4em;
 }
 
-.x .cluster-config .edit .edit-cols > ul.edit-panels > li label.ez-learn_couchbase_v1.ez_couchbase_v1_.nodes {
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label.ez-learn_couchbase_v1.ez_couchbase_v1.nodes {
   display: none;
 }
 
-.x .cluster-config .edit .edit-cols > ul.edit-panels > li label.ez-learn_couchbase_v1.ez_couchbase_v1_.nodes.errs {
+.x .cluster-config .edit .edit-cols > ul.edit-panels > li label.ez-learn_couchbase_v1.ez_couchbase_v1.nodes.errs {
   display: block;
 }
 
