@@ -66,6 +66,10 @@
   justify-content: flex-start;
 }
 
+.x .cluster-config .edit .edit-cols > ul.catalogItems > li:hover {
+  background-color: #f4f8f4;
+}
+
 .x .cluster-config .edit .edit-cols > ul.catalogItems > li > label > .labelInput {
   display: block;
   margin-right: 5px;
