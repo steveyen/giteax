@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 )
 
 func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
@@ -21,6 +22,26 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 			http.FileServer(http.Dir(staticDir))))
 
 	mux.HandleFunc("/x/kick", HttpHandleKick)
+
+	mux.HandleFunc("/x/startFile/", func(w http.ResponseWriter, r *http.Request) {
+		// From "/x/startFile/$userOrg/$repo/_edit/master/cb-config.yaml"
+		//   to "/$userOrg/$repo/_edit/master/cb-config.yaml".
+		pathParts := strings.Split(r.URL.Path, "/")
+		pathClean := "/" + strings.Join(pathParts[3:], "/")
+
+		director := func(req *http.Request) {
+			req.URL.Scheme = proxyTargetURL.Scheme
+			req.URL.Host = proxyTargetURL.Host
+			req.URL.Path = pathClean
+			req.Header.Set("RequestURI", pathClean)
+		}
+
+		proxy := &httputil.ReverseProxy{
+			Director: director,
+		}
+
+		proxy.ServeHTTP(w, r)
+	})
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		director := func(req *http.Request) {
