@@ -10,9 +10,8 @@ $(document).ready(async () => {
     var rt = document.getElementById("repo-topics");
     if (rt) {
       // Example baseURI == "http://localhost:8090/steve/cluster-2".
-      var a = document.querySelector(
-        '.repository.file.list .repo-header .repo-title.breadcrumb a');
-      if (a && a.baseURI.split('/').length <= 5) {
+      var href = window.location.href;
+      if (href.split('/').length <= 5) {
         var lb = document.createElement("label");
         lb.className = "x";
         lb.htmlFor = "x-repo-advanced-toggle";
@@ -34,9 +33,9 @@ $(document).ready(async () => {
 
           rt.parentElement.insertBefore(el, rt.nextSibling);
 
-          fetchBranchFile(a.baseURI,
+          fetchBranchFile(href,
             'master', 'cb-config.yaml', cbConfigYaml => {
-              onCbConfigFetched(a.baseURI, cbConfigYaml);
+              onCbConfigFetched(href, cbConfigYaml);
             });
 
           console.log("xmain ready... done");
