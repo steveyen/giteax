@@ -177,9 +177,9 @@ $(document).ready(async () => {
     var ClusterConfig = {
       view: function() {
         return m("div",
-          m("h3", "Cluster Config"),
           edit
           ? m(".edit", // When in edit mode.
+              m("h3", "Cluster Config (edit)"),
               m("div",
                 {className: "edit-cols index-" + itemKeys.indexOf(edit.item)},
 
@@ -278,12 +278,13 @@ $(document).ready(async () => {
               m(".controls",
                 m("button.ui.button.green",
                   {onclick: editSubmit, disabled: editHasErrors(edit)},
-		  "Next (check YAML)"),
+		  "Configure Next Step"),
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
 
           // When in view mode.
           : m(".view",
+              m("h3", "Cluster Config"),
               m(".catalogItemName", catalog.items[curr.item].name),
               m(".catalogItemKey", curr.item),
               m(".pane",
@@ -304,7 +305,7 @@ $(document).ready(async () => {
                           curr.optionsDict[g.group][s])))))),
               m(".controls",
                 m("button.ui.button",
-                  {onclick: editStart}, "Modify"))));
+                  {onclick: editStart}, "Modify Config"))));
       }
     };
 
