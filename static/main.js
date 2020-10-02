@@ -6,42 +6,51 @@ $(document).ready(async () => {
   // If we're on the right repo file list page, in the right state,
   // then hide the repo file list behind a checkbox / toggle, and then
   // load the cluster-config UI panel.
-  if (document.getElementById("repo-files-table")) {
-    var rt = document.getElementById("repo-topics");
+  //
+  // Or, also engage the cluster-config UI panel if we're
+  // on the empty repo page.
+  //
+  // Example baseURI == "http://localhost:8090/steve/cluster-2".
+  var href = window.location.href;
+  if (href.split('/').length <= 5) {
+    var rt;
+    if (document.getElementById("repo-files-table")) {
+      rt = document.getElementById("repo-topics");
+    } else if (document.querySelector(".repository.quickstart " +
+      ".ui.container .ui.grid .ui.attached.guide.table.segment")) {
+      rt = document.querySelector(".ui.grid");
+    }
+
     if (rt) {
-      // Example baseURI == "http://localhost:8090/steve/cluster-2".
-      var href = window.location.href;
-      if (href.split('/').length <= 5) {
-        var lb = document.createElement("label");
-        lb.className = "x";
-        lb.htmlFor = "x-repo-advanced-toggle";
-        lb.innerHTML = "Show details / history";
-        rt.parentElement.insertBefore(lb, rt.nextSibling);
+      var lb = document.createElement("label");
+      lb.className = "x";
+      lb.htmlFor = "x-repo-advanced-toggle";
+      lb.innerHTML = "Show details / history";
+      rt.parentElement.insertBefore(lb, rt.nextSibling);
 
-        var cb = document.createElement("input");
-        cb.className = "x";
-        cb.id = "x-repo-advanced-toggle";
-        cb.name = "x-repo-advanced-toggle";
-        cb.type = "checkbox";
-        rt.parentElement.insertBefore(cb, rt.nextSibling);
+      var cb = document.createElement("input");
+      cb.className = "x";
+      cb.id = "x-repo-advanced-toggle";
+      cb.name = "x-repo-advanced-toggle";
+      cb.type = "checkbox";
+      rt.parentElement.insertBefore(cb, rt.nextSibling);
 
-        var tmpl = document.getElementById("template-cluster-info");
-        if (tmpl) {
-          el = document.createElement("div");
-          el.className = "x";
-          el.innerHTML = tmpl.innerHTML;
+      var tmpl = document.getElementById("template-cluster-info");
+      if (tmpl) {
+        var el = document.createElement("div");
+        el.className = "x";
+        el.innerHTML = tmpl.innerHTML;
 
-          rt.parentElement.insertBefore(el, rt.nextSibling);
+        rt.parentElement.insertBefore(el, rt.nextSibling);
 
-          fetchBranchFile(href,
-            'master', 'cb-config.yaml', cbConfigYaml => {
-              onCbConfigFetched(href, cbConfigYaml);
-            });
+        fetchBranchFile(href,
+          'master', 'cb-config.yaml', cbConfigYaml => {
+            onCbConfigFetched(cbConfigYaml);
+          });
 
-          console.log("xmain ready... done");
+        console.log("xmain ready... done");
 
-          return; // Success.
-        }
+        return; // Success.
       }
     }
   }
@@ -85,8 +94,14 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  function onCbConfigFetched(baseURI, cbConfigYaml) {
-    var cbConfig = jsyaml.safeLoad(cbConfigYaml);
+  function onCbConfigFetched(cbConfigYaml) {
+    var cbConfig = {};
+
+    if (cbConfigYaml &&
+        cbConfigYaml.length > 0 &&
+        !cbConfigYaml.startsWith("<!DOCTYPE html>")) {
+      cbConfig = jsyaml.safeLoad(cbConfigYaml);
+    }
 
     fetch('/x/static/catalog.yaml')
     .then(response => response.text())
@@ -104,12 +119,9 @@ $(document).ready(async () => {
 
   // Populate the el with UI for cbConfig viewing & editing.
   function cbConfigUI(cbConfig, catalog, el) {
-    console.log("cbConfigUI, cbConfig", cbConfig);
-    console.log("cbConfigUI, catalog", catalog);
-
     var curr = cbConfigInit(cbConfig);
 
-    curr = cbCatalogCheck(cbConfig, catalog);
+    curr = cbCatalogCheck(curr, catalog);
     if (!curr || !curr.item) {
       m.render(el,
         m("h3", "Cluster Config (not from catalog)"),
@@ -173,12 +185,17 @@ $(document).ready(async () => {
       f.submit();
     }
 
+    var isNew = JSON.stringify(cbConfig) == "{}";
+    if (isNew) {
+      editStart();
+    }
+
     var ClusterConfig = {
       view: function() {
         return m("div",
-          edit
+          edit || isNew
           ? m(".edit", // When in edit mode.
-              m("h3", "Cluster Config (edit)"),
+              m("h3", "Cluster Config (" + (isNew ? "create": "edit") + ")"),
               m("div",
                 {className: "edit-cols index-" + itemKeys.indexOf(edit.item)},
 
@@ -278,6 +295,7 @@ $(document).ready(async () => {
                 m("button.ui.button.green",
                   {onclick: editSubmit, disabled: editHasErrors(edit)},
 		  "Configure Next Step"),
+                !isNew &&
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
 
