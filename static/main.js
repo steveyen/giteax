@@ -137,6 +137,21 @@ $(document).ready(async () => {
       }, 200);
     }
 
+    function editHasErrors(edit) {
+      for (const g of (catalog.items[edit.item] || {}).options) {
+        var dg = edit.optionsDict[g.group] || {};
+        for (var s of Object.keys(g)) {
+          if (s.startsWith('^') || s == "group") {
+            continue;
+          }
+          if ((dg['^' + s] || {}).errs) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     function editSubmit() {
       var next = JSON.parse(JSON.stringify(edit));
 
@@ -262,7 +277,8 @@ $(document).ready(async () => {
                   }).join(" "))),
               m(".controls",
                 m("button.ui.button.green",
-                  {onclick: editSubmit}, "Next (check YAML)"),
+                  {onclick: editSubmit, disabled: editHasErrors(edit)},
+		  "Next (check YAML)"),
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
 
