@@ -7,20 +7,11 @@ $(document).ready(async () => {
   // then hide the repo file list behind a checkbox / toggle, and then
   // load the cluster-config UI panel.
   //
-  // Or, also engage the cluster-config UI panel if we're
-  // on the empty repo page.
-  //
   // Example baseURI == "http://localhost:8090/steve/cluster-2".
   var href = window.location.href;
   if (href.split('/').length <= 5) {
-    var rt;
-    if (document.getElementById("repo-files-table")) {
-      rt = document.getElementById("repo-topics");
-    } else if (document.querySelector(".repository.quickstart " +
-      ".ui.container .ui.grid .ui.attached.guide.table.segment")) {
-      rt = document.querySelector(".ui.grid");
-    }
-
+    var rt = document.getElementById("repo-files-table") &&
+             document.getElementById("repo-topics");
     if (rt) {
       var lb = document.createElement("label");
       lb.className = "x";
@@ -69,6 +60,7 @@ $(document).ready(async () => {
               window.codeEditors.length > 0 &&
               window.codeEditors[0].setValue) {
             window.codeEditors[0].setValue(t.innerHTML);
+
             return;
           }
 
@@ -185,17 +177,12 @@ $(document).ready(async () => {
       f.submit();
     }
 
-    var isNew = JSON.stringify(cbConfig) == "{}";
-    if (isNew) {
-      editStart();
-    }
-
     var ClusterConfig = {
       view: function() {
         return m("div",
-          edit || isNew
+          edit
           ? m(".edit", // When in edit mode.
-              m("h3", "Cluster Config (" + (isNew ? "create": "edit") + ")"),
+              m("h3", "Cluster Config (edit)"),
               m("div",
                 {className: "edit-cols index-" + itemKeys.indexOf(edit.item)},
 
@@ -295,7 +282,6 @@ $(document).ready(async () => {
                 m("button.ui.button.green",
                   {onclick: editSubmit, disabled: editHasErrors(edit)},
 		  "Configure Next Step"),
-                !isNew &&
                 m("button.ui.button.red",
                   {onclick: () => { edit = null; }}, "Cancel")))
 
