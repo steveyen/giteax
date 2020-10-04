@@ -1,3 +1,25 @@
+SSH_ORIGINAL_COMMAND=gitea-internal REPO_USER=steve REPO_NAME=cluster-4 make -e repo-init
+
+After installing, need to create the first repo / cluster...
+Call it "CLUSTER-TEMPLATE".
+Initialize the first cb-config.yaml using...
+  SSH_ORIGINAL_COMMAND=gitea-internal \
+    REPO_USER=steve \
+    REPO_NAME=CLUSTER-TEMPLATE \
+    make -e repo-init
+Then, use...
+  sqlite3 ./data/gitea.db
+  update repository set is_empty = 0 WHERE id = 1;
+The CLUSTER-TEMPLATE should have repository.id == 1.
+Then, use the web UI to set the CLUSTER-TEMPLATE's
+  settings to a template cluster.
+
+
+-------
+[Macaron] 2020-10-04 11:18:53: Completed GET /api/v1/repos/search?q=&template=true&priority_owner_id=1&_=1601835492979 200 OK in 1.317376ms
+
+
+-------
 PREFIX-userOrg__repo__branch__nameOptional
   plus label / annotation
 
