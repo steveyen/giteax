@@ -53,20 +53,6 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 		proxy.ServeHTTP(w, r)
 	})
 
-	mux.HandleFunc("/repo/create", func(w http.ResponseWriter, r *http.Request) {
-		proxy := &httputil.ReverseProxy{
-			Director: func(req *http.Request) {
-				req.URL.Scheme = proxyTargetURL.Scheme
-				req.URL.Host = proxyTargetURL.Host
-			},
-			ModifyResponse: func(resp *http.Response) error {
-				return nil
-			},
-		}
-
-		proxy.ServeHTTP(w, r)
-	})
-
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		proxy := &httputil.ReverseProxy{
 			Director: func(req *http.Request) {
