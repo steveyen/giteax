@@ -61,6 +61,8 @@ $(document).ready(async () => {
               window.codeEditors[0].setValue) {
             window.codeEditors[0].setValue(t.innerHTML);
 
+            console.log("xmain ready... xInitFile done");
+
             return;
           }
 
@@ -75,6 +77,8 @@ $(document).ready(async () => {
   // Fall-thru on errors to disabling the UI 'x' extensions.
 
   document.body.className = document.body.className + " x-none";
+
+  console.log("xmain ready... skipped");
 
   // -----------------------------------------------------------
 
