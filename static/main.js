@@ -74,6 +74,21 @@ $(document).ready(async () => {
     }
   }
 
+  if (pathname == "/repo/create") {
+    var rt = document.getElementById("repo_template");
+    var cb = document.querySelector('.repository.new.repo form.ui.form .ui.checkbox input.hidden[name=git_content][type=checkbox]');
+    if (cb && rt && !rt.value) {
+      // NOTE: This needs repo id, not repo name.
+      var repo_template_id = "1";
+
+      rt.value = repo_template_id;
+
+      cb.checked = true;
+
+      console.log("xmain ready... repo/create default template id: " + repo_template_id);
+    }
+  }
+
   // Fall-thru on errors to disabling the UI 'x' extensions.
 
   document.body.className = document.body.className + " x-none";

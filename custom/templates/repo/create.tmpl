@@ -56,6 +56,7 @@
 						<label for="description">{{.i18n.Tr "repo.repo_desc"}}</label>
 						<textarea id="description" name="description">{{.description}}</textarea>
 					</div>
+<div style="display:none;">
 					<div class="inline field">
 						<label>{{.i18n.Tr "repo.template"}}</label>
 						<div id="repo_template_search" class="ui search normal selection dropdown">
@@ -65,15 +66,14 @@
 							</div>
 						</div>
 					</div>
+</div>
 
 					<div id="template_units" style="display: none;">
 <div style="display:none;">
 						<div class="inline field">
 							<label>{{.i18n.Tr "repo.template.items"}}</label>
 							<div class="ui checkbox">
-{{/*								<input class="hidden" name="git_content" type="checkbox" tabindex="0" {{if .git_content}}checked{{end}}>
-*/}}
-								<input class="hidden" name="git_content" type="checkbox" tabindex="0" checked>
+								<input class="hidden" name="git_content" type="checkbox" tabindex="0" {{if .git_content}}checked{{end}}>
 								<label>{{.i18n.Tr "repo.template.git_content"}}</label>
 							</div>
 							<div class="ui checkbox" {{if not .SignedUser.CanEditGitHook}}data-tooltip="{{.i18n.Tr "repo.template.git_hooks_tooltip"}}"{{end}}>
