@@ -32,15 +32,13 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 		pathParts := strings.Split(r.URL.Path, "/")
 		pathClean := "/" + strings.Join(pathParts[3:], "/")
 
-		director := func(req *http.Request) {
-			req.URL.Scheme = proxyTargetURL.Scheme
-			req.URL.Host = proxyTargetURL.Host
-			req.URL.Path = pathClean
-			req.Header.Set("RequestURI", pathClean)
-		}
-
 		proxy := &httputil.ReverseProxy{
-			Director: director,
+			Director: func(req *http.Request) {
+				req.URL.Scheme = proxyTargetURL.Scheme
+				req.URL.Host = proxyTargetURL.Host
+				req.URL.Path = pathClean
+				req.Header.Set("RequestURI", pathClean)
+			},
 		}
 
 		r.ParseForm()
@@ -55,14 +53,26 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 		proxy.ServeHTTP(w, r)
 	})
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		director := func(req *http.Request) {
-			req.URL.Scheme = proxyTargetURL.Scheme
-			req.URL.Host = proxyTargetURL.Host
+	mux.HandleFunc("/repo/create", func(w http.ResponseWriter, r *http.Request) {
+		proxy := &httputil.ReverseProxy{
+			Director: func(req *http.Request) {
+				req.URL.Scheme = proxyTargetURL.Scheme
+				req.URL.Host = proxyTargetURL.Host
+			},
+			ModifyResponse: func(resp *http.Response) error {
+				return nil
+			},
 		}
 
+		proxy.ServeHTTP(w, r)
+	})
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		proxy := &httputil.ReverseProxy{
-			Director: director,
+			Director: func(req *http.Request) {
+				req.URL.Scheme = proxyTargetURL.Scheme
+				req.URL.Host = proxyTargetURL.Host
+			},
 		}
 
 		proxy.ServeHTTP(w, r)

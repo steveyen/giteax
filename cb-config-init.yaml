@@ -1,0 +1,4 @@
+item: ez-micro.couchbase/v1:
+options:
+  group: ez.couchbase/v1
+  nodes: 1
