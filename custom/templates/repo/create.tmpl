@@ -67,10 +67,13 @@
 					</div>
 
 					<div id="template_units" style="display: none;">
+<div style="display:none;">
 						<div class="inline field">
 							<label>{{.i18n.Tr "repo.template.items"}}</label>
 							<div class="ui checkbox">
-								<input class="hidden" name="git_content" type="checkbox" tabindex="0" {{if .git_content}}checked{{end}}>
+{{/*								<input class="hidden" name="git_content" type="checkbox" tabindex="0" {{if .git_content}}checked{{end}}>
+*/}}
+								<input class="hidden" name="git_content" type="checkbox" tabindex="0" checked>
 								<label>{{.i18n.Tr "repo.template.git_content"}}</label>
 							</div>
 							<div class="ui checkbox" {{if not .SignedUser.CanEditGitHook}}data-tooltip="{{.i18n.Tr "repo.template.git_hooks_tooltip"}}"{{end}}>
@@ -100,6 +103,7 @@
 								<label>{{.i18n.Tr "repo.template.issue_labels"}}</label>
 							</div>
 						</div>
+</div>
 					</div>
 
 					<div id="non_template">
@@ -182,15 +186,15 @@
 						</div>
 </div>
 					</div>
+				</div>
 
-					<br/>
-					<div class="inline field">
-						<label></label>
-						<button class="ui green button">
-							{{.i18n.Tr "repo.create_repo"}}
-						</button>
-						<a class="ui button" href="{{AppSubUrl}}/">{{.i18n.Tr "cancel"}}</a>
-					</div>
+				<br/>
+				<div class="inline field">
+					<label></label>
+					<button class="ui green button">
+						{{.i18n.Tr "repo.create_repo"}}
+					</button>
+					<a class="ui button" href="{{AppSubUrl}}/">{{.i18n.Tr "cancel"}}</a>
 				</div>
 			</form>
 		</div>
