@@ -365,7 +365,22 @@ $(document).ready(async () => {
         pathname = pathname.split('/').slice(0, 3).join('/');
       }
 
-      uc.innerHTML = "loading... " + pathname;
+      uc.innerHTML = "loading cluster status: " + pathname;
+
+      fetch("/x/cluster/status" + pathname)
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data);
+
+        var ClusterStatus = {
+          view: function() {
+            return m("div",
+              m("pre", JSON.stringify(data)));
+          }
+        };
+
+        m.mount(uc, ClusterStatus);
+      });
     }
   }
 });
