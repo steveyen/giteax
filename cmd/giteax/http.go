@@ -26,6 +26,8 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 
 	mux.HandleFunc("/x/kick", HttpHandleKick)
 
+	mux.HandleFunc("/x/cluster/status/", HttpHandleClusterStats)
+
 	mux.HandleFunc("/x/initFile/", func(w http.ResponseWriter, r *http.Request) {
 		// From "/x/initFile/$userOrg/$repo/_edit/master/cb-config.yaml"
 		//   to "/$userOrg/$repo/_edit/master/cb-config.yaml".
@@ -198,4 +200,27 @@ func (s *ReaderCloser) Close() error {
 
 func (s *ReaderCloser) Read(p []byte) (n int, err error) {
 	return s.reader.Read(p)
+}
+
+// ------------------------------------------------
+
+func HttpHandleClusterStats(w http.ResponseWriter, r *http.Request) {
+	StatsNumInc("http.ClusterStatus")
+
+	log.Printf("cluster/status, r: %+v", r)
+
+	var err error = nil
+
+	if err == nil {
+		StatsNumInc("http.ClusterStatus.ok")
+	} else {
+		StatsNumInc("http.ClusterStatus.err")
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+
+	data := map[string]interface{}{}
+
+	template.Must(template.ParseFiles(
+		*staticDir+"/cluster-status.html.tmpl")).Execute(w, data)
 }
