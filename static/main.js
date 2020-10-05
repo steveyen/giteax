@@ -3,6 +3,11 @@ console.log("xmain start");
 $(document).ready(async () => {
   console.log("xmain ready...");
 
+  var ff = document.querySelector(".ui.container .fork-flag");
+  if (ff && ff.innerText.indexOf("generated from") < 0) {
+    ff.style.display = "block";
+  }
+
   // If we're on the right repo file list page, in the right state,
   // then hide the repo file list behind a checkbox / toggle, and then
   // load the cluster-config UI panel.
