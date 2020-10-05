@@ -15,3 +15,6 @@ repo-init:
 	git -C $(TMP_REPO_USER_NAME) add cb-config.yaml
 	git -C $(TMP_REPO_USER_NAME) commit -m "first commit"
 	git -C $(TMP_REPO_USER_NAME) push -u origin $(REPO_BRANCH)
+
+repo-cb-config:
+	git -C $(REPOS_DIR)/$(REPO_USER)/$(REPO_NAME).git show $(REPO_BRANCH):cb-config.yaml
