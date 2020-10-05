@@ -14,7 +14,15 @@ $(document).ready(async () => {
   //
   // Example baseURI == "http://localhost:8090/steve/cluster-2".
   var href = window.location.href;
-  if (href.split('/').length <= 5) {
+  var hrefParts = href.split('/');
+  if (hrefParts.length >= 5 &&
+      hrefParts.length <= 6) {
+    var csEl = document.getElementById("xClusterStatus");
+    if (csEl) {
+      csEl.addEventListener("click",
+        () => clusterStatusUI(href, csEl));
+    }
+
     var rt = document.getElementById("repo-files-table") &&
              document.getElementById("repo-topics");
     if (rt) {
@@ -337,5 +345,18 @@ $(document).ready(async () => {
     };
 
     m.mount(el, ClusterConfig);
+  }
+
+  // -----------------------------------------------------------
+
+  // Populate the el with UI for cbConfig viewing & editing.
+  function clusterStatusUI(href, csEl) {
+    var active = document.querySelector(
+      ".ui.tabs.container .ui.tabular.navbar .item.active");
+    if (active) {
+      active.className = active.className.replace("active", "");
+    }
+
+    csEl.className += " active";
   }
 });
