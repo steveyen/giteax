@@ -20,7 +20,7 @@ $(document).ready(async () => {
     var csEl = document.getElementById("xClusterStatus");
     if (csEl) {
       csEl.addEventListener("click",
-        () => clusterStatusUI(href, csEl));
+        () => clusterStatusUI(window.location.pathname, csEl));
     }
 
     var rt = document.getElementById("repo-files-table") &&
@@ -350,7 +350,7 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   // Populate the el with UI for cbConfig viewing & editing.
-  function clusterStatusUI(href, csEl) {
+  function clusterStatusUI(pathname, csEl) {
     var active = document.querySelector(
       ".ui.tabs.container .ui.tabular.navbar .item.active");
     if (active) {
@@ -358,5 +358,14 @@ $(document).ready(async () => {
     }
 
     csEl.className += " active";
+
+    var uc = document.querySelector(".repository > .ui.container");
+    if (uc) {
+      if (pathname.split('/').length > 3) {
+        pathname = pathname.split('/').slice(0, 3).join('/');
+      }
+
+      uc.innerHTML = "loading... " + pathname;
+    }
   }
 });
