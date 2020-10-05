@@ -26,7 +26,7 @@ func HttpMuxInit(mux *http.ServeMux, proxyTarget, staticDir string) {
 
 	mux.HandleFunc("/x/kick", HttpHandleKick)
 
-	mux.HandleFunc("/x/cluster/status/", HttpHandleClusterStats)
+	mux.HandleFunc("/x/cluster/status/", HttpHandleClusterStatus)
 
 	mux.HandleFunc("/x/initFile/", func(w http.ResponseWriter, r *http.Request) {
 		// From "/x/initFile/$userOrg/$repo/_edit/master/cb-config.yaml"
@@ -204,7 +204,7 @@ func (s *ReaderCloser) Read(p []byte) (n int, err error) {
 
 // ------------------------------------------------
 
-func HttpHandleClusterStats(w http.ResponseWriter, r *http.Request) {
+func HttpHandleClusterStatus(w http.ResponseWriter, r *http.Request) {
 	StatsNumInc("http.ClusterStatus")
 
 	log.Printf("cluster/status, r: %+v", r)
@@ -217,10 +217,23 @@ func HttpHandleClusterStats(w http.ResponseWriter, r *http.Request) {
 		StatsNumInc("http.ClusterStatus.err")
 	}
 
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "application/json")
 
-	data := map[string]interface{}{}
+	data := map[string]interface{}{
+		"status": "ok",
+	}
 
-	template.Must(template.ParseFiles(
-		*staticDir+"/cluster-status.html.tmpl")).Execute(w, data)
+	result, err := json.MarshalIndent(data, "", " ")
+	if err != nil {
+		http.Error(w,
+			http.StatusText(http.StatusInternalServerError)+
+				fmt.Sprintf(", HttpHandleClusterStatus, err: %v", err),
+			http.StatusInternalServerError)
+		log.Printf("ERROR: HttpHandleClusterStatus, err: %v", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write(result)
 }
