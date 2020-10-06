@@ -107,6 +107,12 @@ function cbConfigOptionsDictTake(optionsDict, catalog, itemKey) {
 
 // -----------------------------------------------------------
 
+function cbConfigToCAO(curr, catalog, cao) {
+  return cao; // TODO.
+}
+
+// -----------------------------------------------------------
+
 var specChecks = {
   range: function(spec, key, meta) {
     var parts = meta.range.split("..");

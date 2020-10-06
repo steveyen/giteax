@@ -132,17 +132,23 @@ $(document).ready(async () => {
     .then(catalogYaml => {
       var catalog = jsyaml.safeLoad(catalogYaml);
 
-      var el = document.getElementById("cluster-config");
-      if (el) {
-        cbConfigUI(cbConfig, catalog, el);
-      }
+      fetch('/x/static/cao.yaml')
+      .then(response => response.text())
+      .then(caoYaml => {
+        var cao = jsyaml.safeLoadAll(caoYaml);
+
+        var el = document.getElementById("cluster-config");
+        if (el) {
+          cbConfigUI(cbConfig, catalog, cao, el);
+        };
+      });
     });
   }
 
   // -----------------------------------------------------------
 
   // Populate the el with UI for cbConfig viewing & editing.
-  function cbConfigUI(cbConfig, catalog, el) {
+  function cbConfigUI(cbConfig, catalog, cao, el) {
     var curr = cbConfigInit(cbConfig);
 
     curr = cbCatalogCheck(curr, catalog);
@@ -337,7 +343,9 @@ $(document).ready(async () => {
                         m("td.value",
                           curr.optionsDict &&
                           curr.optionsDict[g.group] &&
-                          curr.optionsDict[g.group][s])))))),
+                          curr.optionsDict[g.group][s]))))),
+                m(".cao", JSON.stringify(
+                            cbConfigToCAO(curr, catalog, cao)))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify Config"))));
