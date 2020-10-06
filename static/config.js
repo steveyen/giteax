@@ -131,14 +131,15 @@ function cbConfigGen(curr, catalog, template, path, gitRef) {
 
   replaceVals(rv);
 
-  optionsDict = curr.optionsDict || cbConfigOptionsDictFill(curr, catalog);
+  var optionsDict = curr.optionsDict || cbConfigOptionsDictFill(curr, catalog);
 
   ((catalog.items[curr.item] || {}).options || []).forEach((g) => {
     Object.keys(g).forEach((s) => {
       if (!s.startsWith('^') && s != "group") {
         var path = (g['^' + s] || {}).path;
-	if (path) {
-          objectSetPath(rv, path.split('/'), g[s]);
+        if (path) {
+          objectSetPath(rv, path.split('/'),
+                        parseIntFavor((optionsDict[g.group] || {})[s] || ""));
         }
       }
     });
