@@ -347,8 +347,9 @@ $(document).ready(async () => {
                           curr.optionsDict[g.group] &&
                           curr.optionsDict[g.group][s]))))),
                 m("pre.cao",
-                  JSON.stringify(cbConfigGen(curr, catalog, cao,
-                                             window.location.href)))),
+                  jsyaml.dump(cbConfigGen(curr, catalog, cao,
+                    window.location.pathname
+                      .slice(1).replaceAll('/', '__'))))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify Config"))));

@@ -131,6 +131,19 @@ function cbConfigGen(curr, catalog, template, path, gitRef) {
 
   replaceVals(rv);
 
+  optionsDict = curr.optionsDict || cbConfigOptionsDictFill(curr, catalog);
+
+  ((catalog.items[curr.item] || {}).options || []).forEach((g) => {
+    Object.keys(g).forEach((s) => {
+      if (!s.startsWith('^') && s != "group") {
+        var path = (g['^' + s] || {}).path;
+	if (path) {
+          objectSetPath(rv, path.split('/'), g[s]);
+        }
+      }
+    });
+  });
+
   return rv;
 }
 
@@ -141,7 +154,7 @@ var specChecks = {
     var parts = meta.range.split("..");
 
     var haveInt = checkInt(spec[key]);
-    var wantInt = checkInt(parts[0]) || checkint(parts[1]);
+    var wantInt = checkInt(parts[0]) || checkInt(parts[1]);
     if (wantInt != haveInt) {
       return specErr(spec, key, "invalid type");
     }
@@ -203,8 +216,34 @@ function specErr(spec, key, msg) {
   spec[mkey].errs.push(msg);
 }
 
+// -----------------------------------------------------------
+
 function checkInt(s) {
   return parseInt(s).toString() == s;
+}
+
+function parseIntFavor(s) {
+  if (checkInt(s)) {
+    return parseInt(s);
+  }
+
+  return s;
+}
+
+// -----------------------------------------------------------
+
+function objectSetPath(o, path, v) {
+  while (o && typeof(o) == "object" && path.length > 0) {
+    if (path.length == 1) {
+      o[parseIntFavor(path[0])] = v;
+
+      return;
+    }
+
+    o = o[parseIntFavor(path[0])];
+
+    path = path.slice(1, path.length);
+  }
 }
 
 // -----------------------------------------------------------
