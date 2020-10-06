@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cb-secret
+  name: cbConfigUCB-secret
 type: Opaque
 data:
   username: QWRtaW5pc3RyYXRvcg==  # Administrator
@@ -10,14 +10,13 @@ data:
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 metadata:
-  name: cb-cluster
+  name: cbConfigUCB
   labels:
-    repoUserOrg: steve
-    repoName: cluster-1
+    gitRef: cbConfigUCBGitRef
 spec:
   image: couchbase/server:6.6.0
   security:
-    adminSecret: cb-secret
+    adminSecret: cbConfigUCB-secret
   networking:
     exposeAdminConsole: true
     adminConsoleServices:
@@ -26,7 +25,7 @@ spec:
     managed: false
   servers:
   - size: 1
-    name: cb-servers-1
+    name: cbConfigUCB-servers-1
     services:
     - data
     - index

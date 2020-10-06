@@ -14,6 +14,7 @@ items:
         ^nodes:
           label: '# of nodes in the cluster'
           range: 1..1
+          path: spec/services/0/size
   
   ez-micro.couchbase/v1:
     name: Couchbase Cluster - Micro
@@ -28,6 +29,7 @@ items:
           desc: >-
             Examples: 1, 2
           range: 1..2
+          path: spec/services/0/size
   
   ez-small.couchbase/v1:
     name: Couchbase Cluster - Small
@@ -42,6 +44,7 @@ items:
           desc: >-
             Examples: 1, 2, 3
           range: 1..3
+          path: spec/services/0/size
   
   ez-medium.couchbase/v1:
     name: Couchbase Cluster - Medium
@@ -56,6 +59,7 @@ items:
           desc: >-
             Examples: 1, 2, ... 5
           range: 1..5
+          path: spec/services/0/size
   
   ez-large.couchbase/v1:
     name: Couchbase Cluster - Large
@@ -71,6 +75,7 @@ items:
           desc: >-
             Examples: 1, 2, ... 7
           range: 1..7
+          path: spec/services/0/size
         nodesDataOnly: false
         ^nodesDataOnly:
           label: The above nodes are data-only nodes
@@ -102,6 +107,7 @@ items:
           desc: >-
             Examples: 1, 2, ... 7
           range: 1..7
+          path: spec/services/0/size
         nodesDataOnly: false
         ^nodesDataOnly:
           label: The above nodes are data-only nodes
