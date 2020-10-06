@@ -346,10 +346,7 @@ $(document).ready(async () => {
                           curr.optionsDict &&
                           curr.optionsDict[g.group] &&
                           curr.optionsDict[g.group][s]))))),
-                m("pre.cao",
-                  jsyaml.dump(cbConfigGen(curr, catalog, cao,
-                    window.location.pathname
-                      .slice(1).replaceAll('/', '__'))))),
+                m("pre.cao", genCAOYaml(curr, catalog, cao))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify Config"))));
@@ -357,6 +354,18 @@ $(document).ready(async () => {
     };
 
     m.mount(el, ClusterConfig);
+  }
+
+  // -----------------------------------------------------------
+
+  function genCAOYaml(curr, catalog, cao) {
+     var path = window.location.pathname;
+
+     var sha = (document.querySelector(
+       ".repository .commit-list .sha .shortsha") || {})
+       .innerText || "";
+
+     return jsyaml.dump(cbConfigGen(curr, catalog, cao, path, sha));
   }
 
   // -----------------------------------------------------------

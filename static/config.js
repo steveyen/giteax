@@ -109,7 +109,9 @@ function cbConfigOptionsDictTake(optionsDict, catalog, itemKey) {
 
 // -----------------------------------------------------------
 
-function cbConfigGen(curr, catalog, template, path, gitRef) {
+function cbConfigGen(curr, catalog, template, path, pathSHA) {
+  var pathSafe = path.slice(1).replace(/[^a-zA-Z0-1\-\_\.]/g, '__');
+
   var rv = JSON.parse(JSON.stringify(template));
 
   function replaceVals(o) {
@@ -118,10 +120,12 @@ function cbConfigGen(curr, catalog, template, path, gitRef) {
         var v = o[k];
 
         if (typeof(v) == "string") {
-          o[k] = v.replace("cbConfigPathGitRef",
-                           gitRef || "cbConfigPathGitRef")
+          o[k] = v.replace("cbConfigPathSHA",
+                           pathSHA || "CBConfigPathSHA")
+                  .replace("cbConfigPathSafe",
+                           pathSafe || "CBConfigPathSafe")
                   .replace("cbConfigPath",
-                           path || "cbConfigPath");
+                           path || "CBConfigPath");
         } else {
           replaceVals(v);
         }
