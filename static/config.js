@@ -9,6 +9,8 @@
 //     - group: ez.couchbase/v1
 //       nodes: 1
 
+var CBConfig = (function() {
+
 // -----------------------------------------------------------
 
 function cbConfigInit(cbConfig) {
@@ -183,3 +185,26 @@ function specErr(spec, key, msg) {
 function checkInt(s) {
   return parseInt(s).toString() == s;
 }
+
+// -----------------------------------------------------------
+
+return {
+  cbConfigInit: cbConfigInit,
+
+  cbConfigOptionsDictFill: cbConfigOptionsDictFill,
+  cbConfigOptionsDictTake: cbConfigOptionsDictTake,
+
+  cbCatalogCheck: cbCatalogCheck,
+
+  cbConfigToCAO: cbConfigToCAO,
+
+  specChecks: specChecks,
+  specCheck: specCheck,
+  specErr: specErr,
+
+  checkInt: checkInt,
+};
+
+// -----------------------------------------------------------
+
+})();

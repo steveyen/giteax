@@ -1,5 +1,7 @@
 console.log("xmain start");
 
+Object.assign(window, CBConfig);
+
 $(document).ready(async () => {
   console.log("xmain ready...");
 
