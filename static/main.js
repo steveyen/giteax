@@ -346,8 +346,9 @@ $(document).ready(async () => {
                           curr.optionsDict &&
                           curr.optionsDict[g.group] &&
                           curr.optionsDict[g.group][s]))))),
-                m(".cao", JSON.stringify(
-                            cbConfigToCAO(curr, catalog, cao)))),
+                m("pre.cao",
+                  JSON.stringify(cbConfigGen(curr, catalog, cao,
+                                             window.location.href)))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify Config"))));

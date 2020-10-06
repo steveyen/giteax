@@ -109,8 +109,29 @@ function cbConfigOptionsDictTake(optionsDict, catalog, itemKey) {
 
 // -----------------------------------------------------------
 
-function cbConfigToCAO(curr, catalog, cao) {
-  return cao; // TODO.
+function cbConfigGen(curr, catalog, template, path, gitRef) {
+  var rv = JSON.parse(JSON.stringify(template));
+
+  function replaceVals(o) {
+    if (typeof(o) == "object") {
+      for (var k in o) {
+        var v = o[k];
+
+        if (typeof(v) == "string") {
+          o[k] = v.replace("cbConfigPathGitRef",
+                           gitRef || "cbConfigPathGitRef")
+                  .replace("cbConfigPath",
+                           path || "cbConfigPath");
+        } else {
+          replaceVals(v);
+        }
+      }
+    }
+  }
+
+  replaceVals(rv);
+
+  return rv;
 }
 
 // -----------------------------------------------------------
@@ -196,7 +217,7 @@ return {
 
   cbCatalogCheck: cbCatalogCheck,
 
-  cbConfigToCAO: cbConfigToCAO,
+  cbConfigGen: cbConfigGen,
 
   specChecks: specChecks,
   specCheck: specCheck,
