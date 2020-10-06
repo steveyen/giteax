@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"io"
 	"io/ioutil"
 	"log"
@@ -104,12 +103,23 @@ func HttpHandleKick(w http.ResponseWriter, r *http.Request) {
 		StatsNumInc("http.Kick.err")
 	}
 
-	w.Header().Set("Content-Type", "text/html")
+	data := map[string]interface{}{
+		"status": "ok",
+	}
 
-	data := map[string]interface{}{}
+	result, err := json.MarshalIndent(data, "", " ")
+	if err != nil {
+		http.Error(w,
+			http.StatusText(http.StatusInternalServerError)+
+				fmt.Sprintf(", HttpHandleKick, err: %v", err),
+			http.StatusInternalServerError)
+		log.Printf("ERROR: HttpHandleKick, err: %v", err)
+		return
+	}
 
-	template.Must(template.ParseFiles(
-		*staticDir+"/kick.html.tmpl")).Execute(w, data)
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write(result)
 }
 
 // ------------------------------------------------
@@ -216,8 +226,6 @@ func HttpHandleClusterStatus(w http.ResponseWriter, r *http.Request) {
 	} else {
 		StatsNumInc("http.ClusterStatus.err")
 	}
-
-	w.Header().Set("Content-Type", "application/json")
 
 	data := map[string]interface{}{
 		"status": "ok",
