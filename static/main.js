@@ -346,7 +346,18 @@ $(document).ready(async () => {
                           curr.optionsDict &&
                           curr.optionsDict[g.group] &&
                           curr.optionsDict[g.group][s]))))),
-                m("pre.cao", genCAOYaml(curr, catalog, cao))),
+                m(".cao",
+                  m("input[type=checkbox]", {id: "showCAO"}),
+                  m("label[for=showCAO]", "Show operator.yaml"),
+                  m("textarea.cao",
+                    {readonly: true},
+                    genCAOYaml(curr, catalog, cao)),
+                  m("pre.usage",
+                    "Example operator.yaml usage...\n\n",
+                    "  To create a cluster:\n",
+                    "    kubectl -f create operator.yaml\n\n",
+                    "  To update a cluster:\n",
+                    "    kubectl -f replace operator.yaml\n"))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify Config"))));

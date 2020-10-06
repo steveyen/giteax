@@ -36,6 +36,38 @@
   font-style: italic;
 }
 
+.x .cluster-config .view .pane .cao {
+  margin-bottom: 20px;
+}
+
+.x .cluster-config .view .pane .cao input {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+.x .cluster-config .view .pane .cao textarea {
+  width: 40rem;
+  height: 20rem;
+  font: 12px SF Mono,Consolas,Menlo,Liberation Mono,Monaco,Lucida Console,monospace;
+}
+
+.x .cluster-config .view .pane .cao textarea,
+.x .cluster-config .view .pane .cao pre {
+  display: none;
+  margin-left: 20px;
+}
+
+.x .cluster-config .view .pane .cao input:checked ~ textarea,
+.x .cluster-config .view .pane .cao input:checked ~ pre {
+  display: block;
+}
+
+.x .cluster-config .view .pane .cao pre.usage {
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
 .x .cluster-config .edit .edit-cols {
   display: flex;
   flex-direction: row;
