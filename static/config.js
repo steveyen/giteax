@@ -143,7 +143,7 @@ function cbConfigGen(curr, catalog, template, path, pathSHA) {
         var path = (g['^' + s] || {}).path;
         if (path) {
           objectSetPath(rv, path.split('/'),
-                        parseIntFavor((optionsDict[g.group] || {})[s] || ""));
+            parseIntFavor((optionsDict[g.group] || {})[s] || ""));
         }
       }
     });
@@ -268,6 +268,9 @@ return {
   specErr: specErr,
 
   checkInt: checkInt,
+  parseIntFavor: parseIntFavor,
+
+  objectSetPath: objectSetPath,
 };
 
 // -----------------------------------------------------------
