@@ -227,6 +227,8 @@ function checkInt(s) {
   return parseInt(s).toString() == s;
 }
 
+// Favors returning the result of parseInt(),
+// otherwise returns the input value if not parsable.
 function parseIntFavor(s) {
   if (checkInt(s)) {
     return parseInt(s);
@@ -237,18 +239,22 @@ function parseIntFavor(s) {
 
 // -----------------------------------------------------------
 
+// Sets a leaf value in a nested object/array, given a path
+// like "foo/0/hey", returning true on success.
 function objectSetPath(o, path, v) {
   while (o && typeof(o) == "object" && path.length > 0) {
     if (path.length == 1) {
       o[parseIntFavor(path[0])] = v;
 
-      return;
+      return true;
     }
 
     o = o[parseIntFavor(path[0])];
 
     path = path.slice(1, path.length);
   }
+
+  return false;
 }
 
 // -----------------------------------------------------------
