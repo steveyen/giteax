@@ -11,9 +11,9 @@ apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 metadata:
   name: cbConfigPathSafe
-  labels:
-    repoPath: cbConfigPath
-    repoPathSHA: cbConfigPathSHA
+  annotations:
+    repoPath: "cbConfigPath"
+    repoPathSHA: "cbConfigPathSHA"
 spec:
   image: couchbase/server:6.6.0
   security:

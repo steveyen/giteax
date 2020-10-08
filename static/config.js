@@ -110,7 +110,7 @@ function cbConfigOptionsDictTake(optionsDict, catalog, itemKey) {
 // -----------------------------------------------------------
 
 function cbConfigGen(curr, catalog, template, path, pathSHA) {
-  var pathSafe = path.slice(1).replace(/[^a-zA-Z0-1\-\_\.]/g, '__');
+  var pathSafe = path.slice(1).replace(/[^a-zA-Z0-1\-\.]/g, '--');
 
   var rv = JSON.parse(JSON.stringify(template));
 

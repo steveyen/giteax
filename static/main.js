@@ -354,9 +354,9 @@ $(document).ready(async () => {
                   m("pre.usage",
                     "Example generated-cluster.yaml usage...\n\n",
                     "  To create a cluster:\n",
-                    "    kubectl -f create generated-cluster.yaml\n\n",
+                    "    kubectl create -f generated-cluster.yaml\n\n",
                     "  To update a cluster:\n",
-                    "    kubectl -f replace generated-cluster.yaml\n"))),
+                    "    kubectl replace -f generated-cluster.yaml\n"))),
               m(".controls",
                 m("button.ui.button",
                   {onclick: editStart}, "Modify Config"))));
@@ -375,7 +375,8 @@ $(document).ready(async () => {
        ".repository .commit-list .sha .shortsha") || {})
        .innerText || "";
 
-     return jsyaml.dump(cbConfigGen(curr, catalog, cao, path, sha));
+     return cbConfigGen(curr, catalog, cao, path, sha)
+       .map((v) => jsyaml.dump(v)).join("\n---\n");
   }
 
   // -----------------------------------------------------------
