@@ -134,14 +134,14 @@ $(document).ready(async () => {
     .then(catalogYaml => {
       var catalog = jsyaml.safeLoad(catalogYaml);
 
-      fetch('/x/static/cao.yaml')
+      fetch('/x/static/gen-cluster.yaml')
       .then(response => response.text())
-      .then(caoYaml => {
-        var cao = jsyaml.safeLoadAll(caoYaml);
+      .then(templateYaml => {
+        var template = jsyaml.safeLoadAll(templateYaml);
 
         var el = document.getElementById("cluster-config");
         if (el) {
-          cbConfigUI(cbConfig, catalog, cao, el);
+          cbConfigUI(cbConfig, catalog, template, el);
         };
       });
     });
@@ -150,7 +150,7 @@ $(document).ready(async () => {
   // -----------------------------------------------------------
 
   // Populate the el with UI for cbConfig viewing & editing.
-  function cbConfigUI(cbConfig, catalog, cao, el) {
+  function cbConfigUI(cbConfig, catalog, template, el) {
     var curr = cbConfigInit(cbConfig);
 
     curr = cbCatalogCheck(curr, catalog);
@@ -346,11 +346,11 @@ $(document).ready(async () => {
                           curr.optionsDict &&
                           curr.optionsDict[g.group] &&
                           curr.optionsDict[g.group][s]))))),
-                m(".cao",
-                  m("input[type=checkbox]", {id: "showCAO"}),
-                  m("label[for=showCAO]", "Show generated-cluster.yaml"),
-                  m("pre.cao",
-                    genCAOYaml(curr, catalog, cao)),
+                m(".gen-cluster",
+                  m("input[type=checkbox]", {id: "showGenCluster"}),
+                  m("label[for=showGenCluster]", "Show generated-cluster.yaml"),
+                  m("pre.gen-cluster",
+                    genTemplateYaml(curr, catalog, template)),
                   m("pre.usage",
                     "Example generated-cluster.yaml usage...\n\n",
                     "  To create a cluster:\n",
@@ -368,14 +368,14 @@ $(document).ready(async () => {
 
   // -----------------------------------------------------------
 
-  function genCAOYaml(curr, catalog, cao) {
+  function genTemplateYaml(curr, catalog, template) {
      var path = window.location.pathname;
 
      var sha = (document.querySelector(
        ".repository .commit-list .sha .shortsha") || {})
        .innerText || "";
 
-     return cbConfigGen(curr, catalog, cao, path, sha)
+     return cbConfigGen(curr, catalog, template, path, sha)
        .map((v) => jsyaml.dump(v)).join("\n---\n");
   }
 

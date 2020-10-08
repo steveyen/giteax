@@ -36,27 +36,27 @@
   font-style: italic;
 }
 
-.x .cluster-config .view .pane .cao {
+.x .cluster-config .view .pane .gen-cluster {
   margin-bottom: 20px;
 }
 
-.x .cluster-config .view .pane .cao input {
+.x .cluster-config .view .pane .gen-cluster input {
   display: inline-block;
   margin-right: 5px;
   margin-bottom: 10px;
 }
 
-.x .cluster-config .view .pane .cao pre {
+.x .cluster-config .view .pane .gen-cluster pre {
   display: none;
   margin-left: 20px;
   padding: 10px 10px 10px 10px;
 }
 
-.x .cluster-config .view .pane .cao input:checked ~ pre {
+.x .cluster-config .view .pane .gen-cluster input:checked ~ pre {
   display: block;
 }
 
-.x .cluster-config .view .pane .cao pre.cao {
+.x .cluster-config .view .pane .gen-cluster pre.gen-cluster {
   border: 1px solid #ccc;
 }
 
